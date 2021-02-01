@@ -1,5 +1,9 @@
 #include "KPrintf.h"
 
+extern "C" void kprint_test(){
+	IO::kprint_str("meme");
+}
+
 namespace IO{
 	const int KGreen = 2;
     const int KBlue = 3;

@@ -1,35 +1,35 @@
 #include "GDT.h"
 
-extern "C" void set_gdt(u32* base, u32 limit);
+extern "C" void set_gdt(u32 descriptor);
 
-namespace Memory{
+namespace GDT{
 
-
-
-    GDT gdt;
+    GDTEntry gdt[4];
+    GDTDescriptor gdt_descriptor;
 
     u8 setup_gdt(){
-        add_entry(0, 0, 0xFFFFFFFF, 0x00); // null entry
-        add_entry(1, 0, 0xFFFFFFFF, 0x9A); // code segment descriptor
-        add_entry(2, 0, 0xFFFFFFFF, 0x92); // data segment descriptor
-        add_entry(3, 0, 0xFFFFFFFF, 0x89); // task state segment descriptor
+
+        gdt_descriptor.limit = (sizeof(GDTEntry) * 4) - 1;
+        gdt_descriptor.base = (u32)&gdt;
+
+        add_entry(0, 0, 0, 0, 0); // null entry
+        add_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // code segment descriptor
+        add_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // data segment descriptor
+        add_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // task state segment descriptor
         return 1;
     }
 
-    void install_gdt(GDT gdt){
-        set_gdt((u32*)&gdt, sizeof(gdt)-1);
+    void install_gdt(){
+        set_gdt((u32)&gdt_descriptor);
     }
 
-    GDT& add_entry(u32 idx, u32 base, u32 limit, u16 flag){
-        // first set the high part of the segment
-        gdt.entries[idx].descriptor = limit         & 0x000F0000; // set limit bits 19:16
-        gdt.entries[idx].descriptor |= (flag << 8)  & 0x00F0FF00; // set type
-        gdt.entries[idx].descriptor |= (base >> 16) & 0x000000FF; // set base bits 23:16
-        gdt.entries[idx].descriptor |= base         & 0xFF000000; // set base bits 31:24
-        // shift by 32 to allow for low part of segment
-        gdt.entries[idx].descriptor <<= 32;
-        gdt.entries[idx].descriptor |= base << 16;         // set base bits 15:0
-        gdt.entries[idx].descriptor |= limit & 0x0000FFFF; // set limit bits 15:0
-        return gdt;
+    void add_entry(u32 idx, u32 base, u32 limit, u8 access, u8 granularity){
+        gdt[idx].base_low     = (base & 0xFFFF);
+        gdt[idx].base_middle  = (base >> 16) & 0xFF;
+        gdt[idx].base_high    = (base >> 24) & 0xFF;
+        gdt[idx].limit_low    = (limit & 0xFFFF);
+        gdt[idx].granularity  = (limit >> 16) & 0x0F;
+        gdt[idx].granularity |= (granularity & 0xF0);
+        gdt[idx].access       = access;
     }
 }

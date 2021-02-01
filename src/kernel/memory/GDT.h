@@ -2,27 +2,28 @@
 
 #include "../Types.h"
 
-
-
-namespace Memory{
-
-
-
+namespace GDT {
 
     // 8 bytes long
-    struct GDTEntry{
-        // the reason this is just a single type is because
-        // the layout varies by architecture
-        u64 descriptor;
+    struct __attribute__((packed)) GDTEntry{
+        u16 limit_low;
+        u16 base_low;
+        u8 base_middle;
+        u8 access;      // what ring this segment can be used in
+        u8 granularity;
+        u8 base_high;
     };
 
-    struct GDT{
-        GDTEntry entries[10];
+    struct __attribute__((packed)) GDTDescriptor{
+        u16 limit; // upper 16 bits of all selector limits
+        u32 base;  // base address of the first GDTEntry
     };
 
-    extern GDT gdt;
+    extern GDTEntry gdt[4];
+    extern GDTDescriptor gdt_descriptor;
+
     extern u8 setup_gdt();
-    void install_gdt();
-    extern GDT& add_entry(u32 idx, u32 base, u32 limit, u16 flag);
+    extern void install_gdt();
+    extern void add_entry(u32 idx, u32 base, u32 limit, u8 access, u8 granularity);
 
 }

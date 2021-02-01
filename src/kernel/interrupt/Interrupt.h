@@ -4,27 +4,23 @@
 
 namespace Interrupt{
 
-    struct IDTEntry{
-        u16 offset_low;
+    struct __attribute__((packed)) IDTEntry{
+        u16 base_low;
         u16 selector;   // a code segment selector in GDT (typically 0x9A for code segment)
         u8  zero;
-        u8  type_attr;
-        u16 offset_high;
+        u8  flags;
+        u16 base_high;
     };
 
-    struct IDTDescriptor {
-        u32 end;
-        u64 start;
+    struct __attribute__((packed)) IDTDescriptor{
+        u16 limit;
+        u32 base;
     };
-
-    // Interrupt Descriptor Table
-    struct IDT{
-        IDTEntry entries[256];
-    };
-
-    extern IDT idt;
+    
+    extern IDTEntry idt[256];
+    extern IDTDescriptor idt_descriptor;
     extern u8 setup_interrupts();
-    extern IDT& add_entry(u32 idx, IDTEntry entry);
+    extern void add_entry(u32 idx, u32 base, u16 selector, u8 flags);
     void install_idt();
 
 }

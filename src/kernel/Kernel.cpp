@@ -31,14 +31,15 @@ int main(void){
     IO::kclear();
     IO::kcolour(IO::KGreen);
 
-    Memory::setup_gdt();
+    GDT::setup_gdt();
     Interrupt::setup_interrupts();
-    u16 cursor_location = 5 * 80 + 5;
-    IO::outb(0x3D4, 14);
-    IO::outb(0x3D5, cursor_location >> 8);
-    IO::outb(0x3D4, 14);
-    IO::outb(0x3D5, cursor_location);
-    welcome_msg();
-    while(1){}
+
+    //welcome_msg();
+
+    asm volatile("int $0x3");
+    
+    for(;;){
+        asm("hlt");
+    }
 	return 0;
 }

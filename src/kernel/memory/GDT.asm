@@ -1,21 +1,18 @@
-gdtr DW 0 ; for limit storage
-     DD 0 ; for base storage
-
 section .text
 
 global set_gdt
 
 set_gdt:
-    call enable_a20
     cli
+    call enable_a20
     mov eax, [esp+4]
-    mov [gdtr+2], eax
-    mov ax, [esp+8]
-    mov [gdtr], ax
-    lgdt [gdtr]
+    lgdt [eax]
     jmp enter_protected
-    jmp 08h:reload_registers ; 08h points to the first descriptor in the GDT which is the PM code segment
+    jmp reload_registers
+    jmp 0x08:done ; long jump to flush the CPU
+done:
     ret
+    
 
 ; set the cr0 register to 1 to signal we are in 32-bit protected mode
 enter_protected:
@@ -27,8 +24,12 @@ enter_protected:
 ; this allows us to use more than 20 lines of memory
 enable_a20:
     in al, 0x92
+    test al, 2
+    jnz after
     or al, 2
+    and al, 0xFE
     out 0x92, al
+    after:
     ret
 
 reload_registers:
