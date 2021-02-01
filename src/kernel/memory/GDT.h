@@ -20,8 +20,9 @@ namespace Memory{
         GDTEntry entries[10];
     };
 
-    extern GDT create_gdt();
-    void install_gdt(GDT gdt);
-    extern GDT& add_entry(GDT& gdt, u32 idx, u32 base, u32 limit, u16 flag);
+    extern GDT gdt;
+    extern u8 setup_gdt();
+    void install_gdt();
+    extern GDT& add_entry(u32 idx, u32 base, u32 limit, u16 flag);
 
 }
