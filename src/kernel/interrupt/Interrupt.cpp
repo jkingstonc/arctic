@@ -31,7 +31,7 @@ namespace Interrupt{
                 .selector=0x8,
                 .zero=0,
                 .type_attr=0b10101110,
-                .offset_high=(u16)(keyboard_interrupt&0xFFFF0000 >> 4)
+                .offset_high=(u16)((keyboard_interrupt&0xFFFF0000) >> 4)
                 });
         }
         IO::outb(0x21, 0xFD);
