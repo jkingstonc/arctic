@@ -1,7 +1,7 @@
 ;;kernel.asm
 
 ;nasm directive - 32 bit
-bits 64
+bits 32
 section .text
         ;multiboot spec
         align 4
