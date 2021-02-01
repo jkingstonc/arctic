@@ -1,0 +1,23 @@
+     1                                  ;;kernel.asm
+     2                                  
+     3                                  ;nasm directive - 32 bit
+     4                                  bits 32
+     5                                  section .text
+     6                                          ;multiboot spec
+     7                                          align 4
+     8 00000000 02B0AD1B                        dd 0x1BADB002            ;magic
+     9 00000004 00000000                        dd 0x00                  ;flags
+    10 00000008 FE4F52E4                        dd - (0x1BADB002 + 0x00) ;checksum. m+f+c should be zero
+    11                                  
+    12                                  global start
+    13                                  extern main	        ;kmain is defined in the c file
+    14                                  
+    15                                  start:
+    16 0000000C FA                        cli 			;block interrupts
+    17 0000000D BC[00200000]              mov esp, stack_space	;set stack pointer
+    18 00000012 E8(00000000)              call main
+    19 00000017 F4                        hlt		 	;halt the CPU
+    20                                  
+    21                                  section .bss
+    22 00000000 <res 00002000>          resb 8192		;8KB for stack
+    23                                  stack_space:

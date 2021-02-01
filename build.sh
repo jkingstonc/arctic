@@ -1,12 +1,17 @@
 
 SOURCES=./src
 BUILD=./build
-CFLAGS="-m32 -ffreestanding -nostdlib -nostdinc -lgcc"
+CCOMPILER=g++
+LINKER=ld
+CFLAGS="-m32 -ffreestanding -nostdinc -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions"
+
+clear
 
 nasm -f elf32  $SOURCES/kernel.asm -o $BUILD/kasm.o
-gcc $CFLAGS -c $SOURCES/kernel.cpp -o $BUILD/kernel.o
-gcc $CFLAGS -c $SOURCES/kernel/kprintf.cpp -o $BUILD/kprintf.o
+$CCOMPILER $CFLAGS -c $SOURCES/kernel/Kernel.cpp -o $BUILD/Kernel.o
+$CCOMPILER $CFLAGS -c $SOURCES/kernel/KPrintf.cpp -o $BUILD/KPrintf.o
+$CCOMPILER $CFLAGS -c $SOURCES/kernel/shell/Shell.cpp -o $BUILD/Shell.o
 
-ld -m elf_i386 -T $SOURCES/link.ld -o $BUILD/kernel-0 $BUILD/kasm.o $BUILD/kernel.o $BUILD/kprintf.o
-objcopy -O elf32-i386 $BUILD/kernel-0 $BUILD/kernel-0.elf
-qemu-system-i386 -kernel ./build/kernel-0
+$LINKER -m elf_i386 -T $SOURCES/link.ld -o $BUILD/Kernel-0 $BUILD/kasm.o $BUILD/Kernel.o $BUILD/KPrintf.o $BUILD/Shell.o
+objcopy -O elf32-i386 $BUILD/Kernel-0 $BUILD/Kernel-0.elf
+qemu-system-i386 -kernel ./build/Kernel-0
