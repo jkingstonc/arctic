@@ -29,9 +29,10 @@ int main(void){
     IO::kclear();
     IO::kcolour(IO::KGreen);
 
-    Memory::get_memory_size((Memory::EFIMemoryMap*)0, 0, 0);
-    Interrupt::init_interrupts();
+    Memory::setup_gdt();
+    Interrupt::setup_interrupts();
 
     welcome_msg();
+    while(1){}
 	return 0;
 }
