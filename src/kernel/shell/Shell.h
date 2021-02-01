@@ -5,9 +5,9 @@ namespace Shell {
     public:
         Shell(){}
         ~Shell(){}
-
         static Shell create();
-        int exec(const char * cmd);
         void run();
+    private:
+        int exec(const char * cmd);
     };
 }

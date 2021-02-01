@@ -1,8 +1,13 @@
 #include "KPrintf.h"
 
 namespace IO{
+	const int KGreen = 2;
+    const int KBlue = 3;
+    const int KRed = 4;
+
 	int idx = 0;
 	char * vid_mem = (char*)0xb8000;
+	int k_colour = 0;
 
 	void kclear(){
 		idx = 0;
@@ -17,6 +22,14 @@ namespace IO{
 			vid_mem[j+1] = 0x07; 		
 			j = j + PIX_BYTES;
 		}
+	}
+
+	void k_cursor_pos(int x, int y){
+		idx = x + (COLS*y);
+	}
+
+    void kcolour(int colour){
+		k_colour = colour;
 	}
 
 	void kprintf(const char * msg){
@@ -61,7 +74,7 @@ namespace IO{
 
 	void kprint_c(const char c){
 		vid_mem[idx]=c;
-		vid_mem[idx+1]=0x07;
+		vid_mem[idx+1]=k_colour;
 		idx+=2;
 	}
 

@@ -2,10 +2,12 @@
 
 #include "KPrintf.h"
 #include "shell/Shell.h"
+#include "memory/Memory.h"
+#include "interrupt/Interrupt.h"
 
 
 void welcome_msg(){
-    IO::kclear();
+
     IO::kprintf("   #   \n");
     IO::kprintf("  # #  \n");
     IO::kprintf(" #   # \n");
@@ -23,6 +25,13 @@ void welcome_msg(){
 
 // entry point for the kernel
 int main(void){
+
+    IO::kclear();
+    IO::kcolour(IO::KGreen);
+
+    Memory::get_memory_size((Memory::EFIMemoryMap*)0, 0, 0);
+    Interrupt::init_interrupts();
+
     welcome_msg();
 	return 0;
 }
