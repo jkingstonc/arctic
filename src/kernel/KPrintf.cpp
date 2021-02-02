@@ -78,6 +78,8 @@ namespace IO{
 	}
 
 	void kprint_c(const char c){
+		if(idx >= (COLS*LINES*2))
+			idx = 0;
 		vid_mem[idx]=c;
 		vid_mem[idx+1]=k_colour;
 		idx+=2;

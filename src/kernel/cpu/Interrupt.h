@@ -1,26 +1,33 @@
 #pragma once
 
-#include "../Types.h"
 
 namespace CPU{
 
-    struct IDTEntry{
-        u16 base_low;
-        u16 selector;   // a code segment selector in GDT (typically 0x9A for code segment)
-        u8  zero;
-        u8  flags;
-        u16 base_high;
-    }__attribute__((packed));
-
-    struct IDTDescriptor{
-        u16 limit;
-        u32 base;
-    }__attribute__((packed));
-    
-
-    extern u8 setup_interrupts();
-    extern void add_entry(u32 idx, u32 base, u16 selector, u8 flags);
-
+    extern const char* exception_types[31];
+    extern void handle_exception(const char* exception);
 }
 
-extern CPU::IDTEntry idt[256];
+extern void exc_0();
+extern void exc_1();
+extern void exc_2();
+extern void exc_3();
+extern void exc_4();
+extern void exc_5();
+extern void exc_6();
+extern void exc_7();
+extern void exc_8();
+extern void exc_9();
+extern void exc_10();
+extern void exc_11();
+extern void exc_12();
+extern void exc_13();
+extern void exc_14();
+extern void exc_15();
+extern void exc_16();
+extern void exc_17();
+extern void exc_18();
+extern void exc_19();
+extern void exc_20();
+extern void exc_30();
+extern void pit_handler();
+extern void keyboard_handler();

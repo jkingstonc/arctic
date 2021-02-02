@@ -4,8 +4,8 @@
 #include "shell/Shell.h"
 #include "memory/Memory.h"
 #include "cpu/CPU.h"
-#include "io/Port.h"
-
+#include "dev/Keyboard.h"
+#include "dev/Timer.h"
 
 void welcome_msg(){
     IO::kprintf("   #   \n");
@@ -24,7 +24,11 @@ void welcome_msg(){
 int main(void){
     IO::kclear();
     IO::kcolour(IO::KGreen);
+    Dev::Keyboard::init_keyboard();
+    Dev::Timer::init_timer(5);
     CPU::setup_cpu();
-    for(;;);
+    for(;;) {
+        asm("hlt");
+    }
     return 0;
 }

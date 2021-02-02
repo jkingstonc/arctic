@@ -18,9 +18,12 @@ nasm -f elf32  %SOURCES%/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/shell/Shell.cpp -o %BUILD%/Shell.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/memory/Memory.cpp -o %BUILD%/Memory.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/cpu/Interrupt.cpp -o %BUILD%/Interrupt.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/cpu/IDT.cpp -o %BUILD%/IDT.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/cpu/GDT.cpp -o %BUILD%/GDT.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/Port.cpp -o %BUILD%/Port.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/cpu/CPU.cpp -o %BUILD%/CPU.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Keyboard.cpp -o %BUILD%/Keyboard.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Timer.cpp -o %BUILD%/Timer.o
 
 %LINKER% -m elf_i386 -T %SOURCES%/link.ld -o %BUILD%/Kernel-0 ^
     %BUILD%/kasm.o ^
@@ -30,8 +33,11 @@ nasm -f elf32  %SOURCES%/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/Memory.o ^
     %BUILD%/Port.o ^
     %BUILD%/Interrupt.o ^
+    %BUILD%/IDT.o ^
     %BUILD%/GDT.o ^
     %BUILD%/CPU.o ^
+    %BUILD%/Keyboard.o ^
+    %BUILD%/Timer.o ^
     %BUILD%/GDTasm.o ^
     %BUILD%/IDTasm.o ^
     %BUILD%/CPUasm.o

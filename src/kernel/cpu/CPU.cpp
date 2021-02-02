@@ -1,6 +1,6 @@
 #include "CPU.h"
 #include "GDT.h"
-#include "Interrupt.h"
+#include "IDT.h"
 #include "../KPrintf.h"
 
 extern "C" void enter_protected();

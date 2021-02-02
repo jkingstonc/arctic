@@ -19,7 +19,8 @@ namespace CPU{
         add_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // user code segment descriptor
         add_entry(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // user data segment descriptor
 
-        set_gdt(&gdt_descriptor);
+        asm volatile ("lgdt %0" : : "m"(gdt_descriptor));
+        //set_gdt(&gdt_descriptor);
         return 1;
     }
 
