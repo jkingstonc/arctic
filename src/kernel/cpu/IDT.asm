@@ -1,35 +1,55 @@
 section .text
 
 
-
-extern irq_handler
-global irq
-irq:
-
-
-
+%macro exec_isr 1
+global exec_%1_isr
+extern exec_%1
+exec_%1_isr:
    cli
-
-   pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-
-   mov ax, ds               ; Lower 16-bits of eax = ds.
-   push eax                 ; save the data segment descriptor
-
-   mov ax, 0x10  ; load the kernel data segment descriptor
-   mov ds, ax
-   mov es, ax
-   mov fs, ax
-   mov gs, ax
-
-   call irq_handler
-
-   pop ebx        ; reload the original data segment descriptor
-   mov ds, bx
-   mov es, bx
-   mov fs, bx
-   mov gs, bx
-
-   popa                     ; Pops edi,esi,ebp...
-   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+   pushad  
+   call exec_%1
+   popad                   
    sti
-   iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+   iret           
+%endmacro
+
+exec_isr 0
+exec_isr 1
+exec_isr 2
+exec_isr 3
+exec_isr 4
+exec_isr 5
+exec_isr 6
+exec_isr 7
+exec_isr 8
+exec_isr 9
+exec_isr 10
+exec_isr 11
+exec_isr 12
+exec_isr 13
+exec_isr 14
+exec_isr 15
+exec_isr 16
+exec_isr 17
+exec_isr 18
+exec_isr 19
+
+global exec_20_isr
+extern timer_isr
+exec_20_isr:
+   cli
+   pushad  
+   call timer_isr
+   popad                   
+   sti
+   iret
+
+global exec_keyboard_isr
+extern keyboard_isr
+exec_keyboard_isr:
+   cli
+   pushad  
+   call keyboard_isr
+   popad                   
+   sti
+   iret

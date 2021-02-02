@@ -1,6 +1,8 @@
 #include "Keyboard.h"
 #include "../io/Port.h"
 #include "../KPrintf.h"
+#include "../cpu/IDT.h"
+#include "../cpu/Interrupt.h"
 
 namespace Dev::Keyboard{
 
@@ -44,7 +46,26 @@ namespace Dev::Keyboard{
     };
 
     void init_keyboard(){
+        // to enable only the keyboard:
         IO::outb(0x21, 0xFD);
         IO::kprintf("[INFO] initialised keyboard\n");
+        // start at 20 as previous traps were remapped to start at 0-19
+        CPU::add_entry(0x21, (u32)&exec_keyboard_isr, 0x08, 0x8E);
+    }
+
+    
+    extern "C" void keyboard_isr(){
+        // KEYBOARD IN PORT     = 0X60
+        // KEYBOARD STATUS PORT = 0x64
+        // read from the keyboard in port
+        const u8 status = IO::inb(0x64);
+        const u8 scancode = IO::inb(0x60);
+        /* Lowest bit of status will be set if buffer is not empty */
+        if (status & 0x01) {
+            if(scancode > 0)
+                IO::kprint_c(Dev::Keyboard::keyboard_map[scancode]);
+        }
+        CPU::end_of_interrupt(0x21);
+        return;
     }
 }

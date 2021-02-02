@@ -24,11 +24,9 @@ void welcome_msg(){
 int main(void){
     IO::kclear();
     IO::kcolour(IO::KGreen);
-    Dev::Keyboard::init_keyboard();
-    Dev::Timer::init_timer(5);
     CPU::setup_cpu();
-    for(;;) {
-        asm("hlt");
-    }
+    Dev::Keyboard::init_keyboard();
+    Dev::Timer::init_timer(100);
+    for(;;) asm("hlt\n\t");
     return 0;
 }

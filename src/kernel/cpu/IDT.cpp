@@ -4,22 +4,15 @@
 #include "../io/Port.h"
 
 
-
-extern "C" void set_idt(CPU::IDTDescriptor* idt_descriptor);
-
-extern "C" void irq();
-
-extern "C" void irq_handler(){
-    keyboard_handler();
-    return;
-}
-
-
 CPU::IDTEntry idt[256] = {0};
 CPU::IDTDescriptor idt_descriptor;
 
 namespace CPU{
 
+    void remap_pic_keyboard_only(){
+        IO::outb(0x21,0xfd);
+        IO::outb(0xa1,0xff);
+    }
 
     void remap_pic(){
         IO::outb(0x20, 0x11);
@@ -36,54 +29,28 @@ namespace CPU{
     }
 
     u8 setup_interrupts(){
-        //add_entry(0, (u32)&irq, 0x08, 0x8E);
-        add_entry(1, (u32)&irq, 0x08, 0x8E);
-        add_entry(2, (u32)&irq, 0x08, 0x8E);
-        add_entry(3, (u32)&irq, 0x08, 0x8E);
-        add_entry(4, (u32)&irq, 0x08, 0x8E);
-        add_entry(5, (u32)&irq, 0x08, 0x8E);
-        add_entry(6, (u32)&irq, 0x08, 0x8E);
-        add_entry(7, (u32)&irq, 0x08, 0x8E);
-        add_entry(8, (u32)&irq, 0x08, 0x8E);
-        add_entry(9, (u32)&irq, 0x08, 0x8E);
-        add_entry(10, (u32)&irq, 0x08, 0x8E);
-        add_entry(11, (u32)&irq, 0x08, 0x8E);
-        add_entry(12, (u32)&irq, 0x08, 0x8E);
-        add_entry(13, (u32)&irq, 0x08, 0x8E);
-        add_entry(14, (u32)&irq, 0x08, 0x8E);
-        add_entry(15, (u32)&irq, 0x08, 0x8E);
-        add_entry(16, (u32)&irq, 0x08, 0x8E);
-        add_entry(17, (u32)&irq, 0x08, 0x8E);
-        add_entry(18, (u32)&irq, 0x08, 0x8E);
-        add_entry(19, (u32)&irq, 0x08, 0x8E);
-        add_entry(20, (u32)&irq, 0x08, 0x8E);
-        add_entry(21, (u32)&irq, 0x08, 0x8E);
-        add_entry(22, (u32)&irq, 0x08, 0x8E);
-        add_entry(23, (u32)&irq, 0x08, 0x8E);
-        add_entry(24, (u32)&irq, 0x08, 0x8E);
-        add_entry(25, (u32)&irq, 0x08, 0x8E);
-        add_entry(26, (u32)&irq, 0x08, 0x8E);
-        add_entry(27, (u32)&irq, 0x08, 0x8E);
-        add_entry(28, (u32)&irq, 0x08, 0x8E);
-        add_entry(29, (u32)&irq, 0x08, 0x8E);
-        add_entry(30, (u32)&irq, 0x08, 0x8E);
-        add_entry(31, (u32)&irq, 0x08, 0x8E);
-        add_entry(32, (u32)&irq, 0x08, 0x8E);
-        add_entry(33, (u32)&irq, 0x08, 0x8E);
-        add_entry(34, (u32)&irq, 0x08, 0x8E);
-        add_entry(35, (u32)&irq, 0x08, 0x8E);
-        add_entry(36, (u32)&irq, 0x08, 0x8E);
-        add_entry(37, (u32)&irq, 0x08, 0x8E);
-        add_entry(38, (u32)&irq, 0x08, 0x8E);
-        add_entry(39, (u32)&irq, 0x08, 0x8E);
-        add_entry(40, (u32)&irq, 0x08, 0x8E);
-        add_entry(41, (u32)&irq, 0x08, 0x8E);
-        add_entry(42, (u32)&irq, 0x08, 0x8E);
-        add_entry(43, (u32)&irq, 0x08, 0x8E);
-        add_entry(44, (u32)&irq, 0x08, 0x8E);
-        add_entry(45, (u32)&irq, 0x08, 0x8E);
-        add_entry(46, (u32)&irq, 0x08, 0x8E);
-        add_entry(47, (u32)&irq, 0x08, 0x8E);
+        // first setup the traps (exception instructions)
+        add_entry(0, (u32)&exec_0_isr, 0x08, 0x8E);
+        add_entry(1, (u32)&exec_1_isr, 0x08, 0x8E);
+        add_entry(2, (u32)&exec_2_isr, 0x08, 0x8E);
+        add_entry(3, (u32)&exec_3_isr, 0x08, 0x8E);
+        add_entry(4, (u32)&exec_4_isr, 0x08, 0x8E);
+        add_entry(5, (u32)&exec_5_isr, 0x08, 0x8E);
+        add_entry(6, (u32)&exec_6_isr, 0x08, 0x8E);
+        add_entry(7, (u32)&exec_7_isr, 0x08, 0x8E);
+        add_entry(8, (u32)&exec_8_isr, 0x08, 0x8E);
+        add_entry(9, (u32)&exec_9_isr, 0x08, 0x8E);
+        add_entry(10, (u32)&exec_10_isr, 0x08, 0x8E);
+        add_entry(11, (u32)&exec_11_isr, 0x08, 0x8E);
+        add_entry(12, (u32)&exec_12_isr, 0x08, 0x8E);
+        add_entry(13, (u32)&exec_13_isr, 0x08, 0x8E);
+        add_entry(14, (u32)&exec_14_isr, 0x08, 0x8E);
+        add_entry(15, (u32)&exec_15_isr, 0x08, 0x8E);
+        add_entry(16, (u32)&exec_16_isr, 0x08, 0x8E);
+        add_entry(17, (u32)&exec_17_isr, 0x08, 0x8E);
+        add_entry(18, (u32)&exec_18_isr, 0x08, 0x8E);
+        add_entry(19, (u32)&exec_19_isr, 0x08, 0x8E);
+
         // add_entry(0, (u32)&exc_0, 0x08, 0x8E);
         // add_entry(1, (u32)&keyboard_handler, 0x08, 0x8E);
         // add_entry(2, (u32)&exc_2, 0x08, 0x8E);
