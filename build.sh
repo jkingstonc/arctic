@@ -1,7 +1,9 @@
 
 SOURCES=./src
 BUILD=./build
+
 CCOMPILER=g++
+CCOMPILER="wsl $WSLENV/x86_64-elf-gcc"
 LINKER=ld
 CFLAGS="-m32 -ffreestanding -nostdinc -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions"
 
@@ -37,3 +39,4 @@ $LINKER -m elf_i386 -T $SOURCES/link.ld -o $BUILD/Kernel-0 \
 
 objcopy -O elf32-i386 $BUILD/Kernel-0 $BUILD/Kernel-0.elf
 qemu-system-i386 -kernel ./build/Kernel-0
+read
