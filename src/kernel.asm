@@ -20,4 +20,5 @@ start:
 
 section .bss
 resb 8192		;8KB for stack
+global stack_space
 stack_space:

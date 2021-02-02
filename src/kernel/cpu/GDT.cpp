@@ -1,29 +1,29 @@
 #include "GDT.h"
 
-extern "C" void set_gdt(u32 descriptor);
+extern "C" void set_gdt(CPU::GDTDescriptor* gdt_descriptor);
 
-namespace GDT{
+CPU::GDTEntry gdt[5];
+CPU::GDTDescriptor gdt_descriptor;
 
-    GDTEntry gdt[4];
-    GDTDescriptor gdt_descriptor;
+namespace CPU{
+
 
     u8 setup_gdt(){
 
-        gdt_descriptor.limit = (sizeof(GDTEntry) * 4) - 1;
+        gdt_descriptor.limit = (sizeof(GDTEntry) * 5) - 1;
         gdt_descriptor.base = (u32)&gdt;
 
         add_entry(0, 0, 0, 0, 0); // null entry
         add_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // code segment descriptor
         add_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // data segment descriptor
-        add_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // task state segment descriptor
+        add_entry(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // user code segment descriptor
+        add_entry(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // user data segment descriptor
+
+        set_gdt(&gdt_descriptor);
         return 1;
     }
 
-    void install_gdt(){
-        set_gdt((u32)&gdt_descriptor);
-    }
-
-    void add_entry(u32 idx, u32 base, u32 limit, u8 access, u8 granularity){
+    void add_entry(u8 idx, u32 base, u32 limit, u8 access, u8 granularity){
         gdt[idx].base_low     = (base & 0xFFFF);
         gdt[idx].base_middle  = (base >> 16) & 0xFF;
         gdt[idx].base_high    = (base >> 24) & 0xFF;

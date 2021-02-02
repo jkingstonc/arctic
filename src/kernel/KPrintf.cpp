@@ -1,7 +1,8 @@
 #include "KPrintf.h"
 
-extern "C" void kprint_test(){
-	IO::kprint_str("meme");
+extern "C" void kprint_test(int i){
+	IO::kprintf("test:\n");
+	IO::kprint_int(i);
 }
 
 namespace IO{
