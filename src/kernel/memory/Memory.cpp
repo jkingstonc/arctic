@@ -1,5 +1,5 @@
 #include "Memory.h"
-#include "../KPrintf.h"
+#include "../io/KPrintf.h"
 
 namespace Memory{
 

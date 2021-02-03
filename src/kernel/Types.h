@@ -8,3 +8,4 @@ typedef unsigned long long u64;
 typedef long long s64;
 typedef float f32;
 typedef double f64;
+typedef u32 size;

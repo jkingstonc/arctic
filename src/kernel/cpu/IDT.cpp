@@ -1,6 +1,6 @@
 #include "IDT.h"
 #include "Interrupt.h"
-#include "../KPrintf.h"
+#include "../io/KPrintf.h"
 #include "../io/Port.h"
 
 

@@ -1,6 +1,6 @@
 #include "Timer.h"
 #include "../cpu/Interrupt.h"
-#include "../KPrintf.h"
+#include "../io/KPrintf.h"
 #include "../cpu/IDT.h"
 #include "../io/Port.h"
 
@@ -10,7 +10,6 @@ namespace Dev::Timer{
 
     void timer_handler(u32 idx){
         tick++;
-        IO::kprintf("tick!\n");
         CPU::end_of_interrupt(0x20);
     }
 

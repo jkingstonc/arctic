@@ -2,7 +2,7 @@
 #include "GDT.h"
 #include "IDT.h"
 #include "Interrupt.h"
-#include "../KPrintf.h"
+#include "../io/KPrintf.h"
 
 extern "C" void enter_protected();
 

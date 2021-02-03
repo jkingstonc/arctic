@@ -1,8 +1,9 @@
 
 
-#include "KPrintf.h"
+#include "io/KPrintf.h"
 #include "shell/Shell.h"
 #include "memory/Memory.h"
+#include "memory/Paging.h"
 #include "cpu/CPU.h"
 #include "dev/Keyboard.h"
 #include "dev/Timer.h"
@@ -27,6 +28,7 @@ int main(void){
     CPU::setup_cpu();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
+    Memory::setup_paging();
     for(;;) asm("hlt\n\t");
     return 0;
 }

@@ -1,5 +1,5 @@
 #include "Interrupt.h"
-#include "../KPrintf.h"
+#include "../io/KPrintf.h"
 #include "../io/Port.h"
 #include "../dev/Keyboard.h"
 #include "IDT.h"
