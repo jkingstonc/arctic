@@ -1,55 +1,63 @@
 section .text
 
 
-%macro exec_isr 1
-global exec_%1_isr
-extern exec_%1
-exec_%1_isr:
-   cli
-   pushad  
-   call exec_%1
-   popad                   
+%macro interrupt_isr 1
+global interrupt_isr_%1
+extern interrupt_handler
+interrupt_isr_%1:
+   cli           ; clear interrupts
+   pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+   push byte 0   ; push a dummy error code
+   push byte %1  ; push the interrupt id
+   call interrupt_handler
+   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+   popa                     ; Pops edi,esi,ebp...
    sti
-   iret           
+   iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP          
 %endmacro
 
-exec_isr 0
-exec_isr 1
-exec_isr 2
-exec_isr 3
-exec_isr 4
-exec_isr 5
-exec_isr 6
-exec_isr 7
-exec_isr 8
-exec_isr 9
-exec_isr 10
-exec_isr 11
-exec_isr 12
-exec_isr 13
-exec_isr 14
-exec_isr 15
-exec_isr 16
-exec_isr 17
-exec_isr 18
-exec_isr 19
-
-global exec_20_isr
-extern timer_isr
-exec_20_isr:
-   cli
-   pushad  
-   call timer_isr
-   popad                   
-   sti
-   iret
-
-global exec_keyboard_isr
-extern keyboard_isr
-exec_keyboard_isr:
-   cli
-   pushad  
-   call keyboard_isr
-   popad                   
-   sti
-   iret
+interrupt_isr 0
+interrupt_isr 1
+interrupt_isr 2
+interrupt_isr 3
+interrupt_isr 4
+interrupt_isr 5
+interrupt_isr 6
+interrupt_isr 7
+interrupt_isr 8
+interrupt_isr 9
+interrupt_isr 10
+interrupt_isr 11
+interrupt_isr 12
+interrupt_isr 13
+interrupt_isr 14
+interrupt_isr 15
+interrupt_isr 16
+interrupt_isr 17
+interrupt_isr 18
+interrupt_isr 19
+interrupt_isr 20
+interrupt_isr 21
+interrupt_isr 22
+interrupt_isr 23
+interrupt_isr 24
+interrupt_isr 25
+interrupt_isr 26
+interrupt_isr 27
+interrupt_isr 28
+interrupt_isr 29
+interrupt_isr 30
+interrupt_isr 31
+interrupt_isr 32
+interrupt_isr 33
+interrupt_isr 34
+interrupt_isr 35
+interrupt_isr 36
+interrupt_isr 37
+interrupt_isr 38
+interrupt_isr 39
+interrupt_isr 40
+interrupt_isr 41
+interrupt_isr 42
+interrupt_isr 43
+interrupt_isr 44

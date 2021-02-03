@@ -26,7 +26,7 @@ int main(void){
     IO::kcolour(IO::KGreen);
     CPU::setup_cpu();
     Dev::Keyboard::init_keyboard();
-    Dev::Timer::init_timer(100);
+    Dev::Timer::init_timer(1);
     for(;;) asm("hlt\n\t");
     return 0;
 }

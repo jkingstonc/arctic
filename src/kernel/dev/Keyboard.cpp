@@ -49,12 +49,12 @@ namespace Dev::Keyboard{
         // to enable only the keyboard:
         IO::outb(0x21, 0xFD);
         IO::kprintf("[INFO] initialised keyboard\n");
-        // start at 20 as previous traps were remapped to start at 0-19
-        CPU::add_entry(0x21, (u32)&exec_keyboard_isr, 0x08, 0x8E);
+        // start at 0x20 as previous traps were remapped to start at 0-19
+        CPU::register_interrupt(0x21, keyboard_handler, 0x08, 0x8E);
     }
 
     
-    extern "C" void keyboard_isr(){
+    void keyboard_handler(u32 idx){
         // KEYBOARD IN PORT     = 0X60
         // KEYBOARD STATUS PORT = 0x64
         // read from the keyboard in port

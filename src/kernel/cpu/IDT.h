@@ -18,8 +18,7 @@ namespace CPU{
         u32 base;
     }__attribute__((packed));
     
-
-    extern u8 setup_interrupts();
+    extern u8 setup_idt();
     extern void add_entry(u32 idx, u32 base, u16 selector, u8 flags);
 
 }
