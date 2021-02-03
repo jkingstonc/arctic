@@ -4,14 +4,15 @@
 
 namespace Memory{
 
+    // each page is 4Mib (4194304 bytes)
     struct Page{
-        u32 memory[4000];
+        u32 memory[4194304];
     }__attribute__((packed));
 
     // contains an array of pages
     struct PageTable{
         u32 entries[1024];
-    }__attribute__((packed));
+    }__attribute__((packed)) __attribute__((aligned(4096)));
 
     // contains an array of page tables
     struct PageDirectory{

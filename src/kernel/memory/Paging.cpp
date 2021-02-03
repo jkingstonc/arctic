@@ -35,7 +35,7 @@ namespace Memory{
         setup_page_directory();
         setup_page_table();
         enable_paging((u32)&page_directory);
-        IO::kprintf("[INFO] enabled paging");
+        IO::kprintf("[INFO] enabled paging\n");
     }
 
     u32 virtual_to_physical(u32 address){
