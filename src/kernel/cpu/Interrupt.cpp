@@ -115,9 +115,7 @@ namespace CPU{
     };
 
     void handle_exception(const char* exception) {
-        IO::kprintf("[EXCEPTION] ");
-        IO::kprintf(exception);
-        IO::kprintf("\n");
+        IO::kwarn(exception);
     }
 
     void setup_interrupts(){

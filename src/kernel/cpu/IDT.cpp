@@ -25,7 +25,7 @@ namespace CPU{
         IO::outb(0xA1, 0x01);
         IO::outb(0x21, 0x0);
         IO::outb(0xA1, 0x0);
-        IO::kprintf("[INFO] remapped PIC\n");
+        IO::kinfo("remapped PIC\n");
     }
 
     u8 setup_idt(){

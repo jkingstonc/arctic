@@ -6,13 +6,34 @@ extern "C" void kprint_test(int i){
 }
 
 namespace IO{
-	const int KGreen = 2;
-    const int KBlue = 3;
-    const int KRed = 4;
+
+    const int VGAGreen   = 0x2;
+    const int VGACyan    = 0x3;
+    const int VGARed     = 0x4;
+    const int VGAMagenta = 0x5;
 
 	int idx = 0;
 	char * vid_mem = (char*)0xb8000;
 	int k_colour = 0;
+
+
+	void kinfo(const char * info){
+		kcolour(VGACyan);
+		kprintf("[INFO] ");
+		kprintf(info);
+	}
+
+	void kwarn(const char * warn){
+		kcolour(VGAMagenta);
+		kprintf("[WARNING] ");
+		kprintf(warn);
+	}
+
+	void kerr(const char * err){
+		kcolour(VGARed);
+		kprintf("[ERROR] ");
+		kprintf(err);
+	}
 
 	void kclear(){
 		idx = 0;
@@ -42,19 +63,6 @@ namespace IO{
 		/* this loop writes the string to video memory */
 		while(msg[j] != '\0') {
 			switch(msg[j]){
-				case '\n': {
-					// calculate how far we are along the line
-					int line_idx = (idx/PIX_BYTES) % COLS;
-					// move to the start of the next line
-					idx+= ((COLS-line_idx)*PIX_BYTES);
-					++j;
-					break;
-				}
-				case '\t': {
-					idx+= (4*PIX_BYTES);
-					++j;
-					break;
-				}
 				case '%':
 				{
 					switch(msg[j+1]){
@@ -80,9 +88,24 @@ namespace IO{
 	void kprint_c(const char c){
 		if(idx >= (COLS*LINES*2))
 			idx = 0;
-		vid_mem[idx]=c;
-		vid_mem[idx+1]=k_colour;
-		idx+=2;
+		switch(c){
+			case '\n': {
+				// calculate how far we are along the line
+				int line_idx = (idx/PIX_BYTES) % COLS;
+				// move to the start of the next line
+				idx+= ((COLS-line_idx)*PIX_BYTES);
+				break;
+			}
+			case '\t': {
+				idx+= (4*PIX_BYTES);
+				break;
+			}
+			default:{
+				vid_mem[idx]=c;
+				vid_mem[idx+1]=k_colour;
+				idx+=2;
+			}
+		}
 	}
 
 	void kprint_int(int i){

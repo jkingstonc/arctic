@@ -4,6 +4,25 @@
 #include "../cpu/IDT.h"
 #include "../cpu/Interrupt.h"
 
+
+
+namespace Device{
+    u8 Keyboard::read(){
+        return 0;
+    }
+    void Keyboard::write(u8 c){
+
+    }
+}
+
+
+
+
+
+
+
+
+
 namespace Dev::Keyboard{
 
     const u8 keyboard_map[128] = {
@@ -48,7 +67,7 @@ namespace Dev::Keyboard{
     void init_keyboard(){
         // to enable only the keyboard:
         // IO::outb(0x21, 0xFD);
-        IO::kprintf("[INFO] initialised keyboard\n");
+        IO::kinfo("initialised keyboard\n");
         // start at 0x20 as previous traps were remapped to start at 0-19
         CPU::register_interrupt(0x21, keyboard_handler, 0x08, 0x8E);
     }
@@ -63,7 +82,7 @@ namespace Dev::Keyboard{
         /* Lowest bit of status will be set if buffer is not empty */
         if (status & 0x01) {
             if(scancode > 0){
-                IO::kprintf("keyboard!\n");
+                IO::kwarn("keyboard!\n");
                 //IO::kprint_c(Dev::Keyboard::keyboard_map[scancode]);
             }
         }

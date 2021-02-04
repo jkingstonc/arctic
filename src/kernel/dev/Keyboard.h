@@ -1,6 +1,15 @@
 #pragma once
 
 #include "../Types.h"
+#include "Character.h"
+
+namespace Device{
+    class Keyboard : public CharacterDevice{
+        public:
+        u8 read() override;
+        void write(u8 c) override;
+    };
+}
 
 namespace Dev{
     namespace Keyboard{

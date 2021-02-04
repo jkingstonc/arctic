@@ -1,6 +1,8 @@
 #pragma once
 
+typedef bool u1;
 typedef unsigned char u8;
+typedef char s8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef int s32;

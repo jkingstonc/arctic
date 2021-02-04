@@ -4,12 +4,19 @@
 #define COLS      80
 #define PIX_BYTES 2
 
+#define CYAN  0x3
+#define GREEN 0x2
+#define RED   0x4
+
 namespace IO{
-    extern const int KGreen;
-    extern const int KBlue;
-    extern const int KRed;
+    extern const int VGAGreen;
+    extern const int VGACyan;
+    extern const int VGARed;
     extern int idx;
     extern char * vid_mem;
+    void kinfo(const char * info);
+    void kwarn(const char * war);
+    void kerr(const char * err);
     void k_cursor_pos(int x, int y);
     void kclear();
     void kcolour(int colour);

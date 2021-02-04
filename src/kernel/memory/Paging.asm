@@ -1,6 +1,6 @@
 
 
-.text
+section .text
 [bits 32]
 global enable_paging
 enable_paging:

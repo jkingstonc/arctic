@@ -9,10 +9,10 @@ extern "C" void enter_protected();
 namespace CPU{
     void setup_cpu(){
         setup_gdt();
-        IO::kprintf("[INFO] GDT initialised\n");
+        IO::kinfo("GDT initialised\n");
         enter_protected();
-        IO::kprintf("[INFO] Entered 32-bit protected mode\n");
+        IO::kinfo("Entered 32-bit protected mode\n");
         setup_interrupts();
-        IO::kprintf("[INFO] IDT initialised\n");
+        IO::kinfo("IDT initialised\n");
     }
 }
