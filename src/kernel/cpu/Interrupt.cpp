@@ -19,16 +19,16 @@ extern "C" void interrupt_isr_4();
 extern "C" void interrupt_isr_5();
 extern "C" void interrupt_isr_6();
 extern "C" void interrupt_isr_7();
-extern "C" void interrupt_isr_8();
+extern "C" void interrupt_isr_err_8();
 extern "C" void interrupt_isr_9();
-extern "C" void interrupt_isr_10();
-extern "C" void interrupt_isr_11();
-extern "C" void interrupt_isr_12();
-extern "C" void interrupt_isr_13();
-extern "C" void interrupt_isr_14();
+extern "C" void interrupt_isr_err_10();
+extern "C" void interrupt_isr_err_11();
+extern "C" void interrupt_isr_err_12();
+extern "C" void interrupt_isr_err_13();
+extern "C" void interrupt_isr_err_14();
 extern "C" void interrupt_isr_15();
 extern "C" void interrupt_isr_16();
-extern "C" void interrupt_isr_17();
+extern "C" void interrupt_isr_err_17();
 extern "C" void interrupt_isr_18();
 extern "C" void interrupt_isr_19();
 extern "C" void interrupt_isr_20();
@@ -41,7 +41,7 @@ extern "C" void interrupt_isr_26();
 extern "C" void interrupt_isr_27();
 extern "C" void interrupt_isr_28();
 extern "C" void interrupt_isr_29();
-extern "C" void interrupt_isr_30();
+extern "C" void interrupt_isr_err_30();
 extern "C" void interrupt_isr_31();
 extern "C" void interrupt_isr_32();
 extern "C" void interrupt_isr_33();
@@ -61,16 +61,16 @@ namespace CPU{
         interrupt_isr_5,
         interrupt_isr_6,
         interrupt_isr_7,
-        interrupt_isr_8,
+        interrupt_isr_err_8,
         interrupt_isr_9,
-        interrupt_isr_10,
-        interrupt_isr_11,
-        interrupt_isr_12,
-        interrupt_isr_13,
-        interrupt_isr_14,
+        interrupt_isr_err_10,
+        interrupt_isr_err_11,
+        interrupt_isr_err_12,
+        interrupt_isr_err_13,
+        interrupt_isr_err_14,
         interrupt_isr_15,
         interrupt_isr_16,
-        interrupt_isr_17,
+        interrupt_isr_err_17,
         interrupt_isr_18,
         interrupt_isr_19,
         interrupt_isr_20,
@@ -83,7 +83,7 @@ namespace CPU{
         interrupt_isr_27,
         interrupt_isr_28,
         interrupt_isr_29,
-        interrupt_isr_30,
+        interrupt_isr_err_30,
         interrupt_isr_31,
         interrupt_isr_32,
         interrupt_isr_33,
@@ -91,7 +91,7 @@ namespace CPU{
         interrupt_isr_35,
     };
 
-    const char* exception_types[20] = {
+    const char* exception_types[] = {
         "Division By Zero",
         "Debug",
         "Non Maskable Interrupt",
@@ -101,17 +101,28 @@ namespace CPU{
         "Invalid Opcode",
         "Device Not Available",
         "Double Fault",
+        "Coprosessor Segment Overrun",
         "Invalid TSS",
         "Segment Not Present",
-        "Stack Exception",
+        "Stack-Segment Fault",
         "General Protection Fault",
         "Page Fault",
+        "Reserved",
         "x87 Floating Point Exception",
         "Alignment Check",
         "Machine Check",
         "SIMD Floating Point Exception",
         "Virtualisation Exception",
-        "Control Protection Exception Exception"
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Reserved",
+        "Triple Fault"
     };
 
     void handle_exception(const char* exception) {

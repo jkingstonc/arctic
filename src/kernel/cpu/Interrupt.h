@@ -13,7 +13,7 @@ namespace CPU{
         u32 eip, cs, eflags, useresp, ss;
     };
     extern void (*interrupts[256])(Registers);
-    extern const char* exception_types[20];
+    extern const char* exception_types[31];
     extern void setup_interrupts();
     extern void register_interrupt(u32 idx, void(interrupt)(Registers), u16 selector, u8 flags);
     extern void handle_exception(const char* exception);

@@ -32,6 +32,8 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/driver/Driver.cpp -o %BUILD%/Driver.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/driver/PS2Keyboard.cpp -o %BUILD%/PS2Keyboard.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/driver/VGAGraphics.cpp -o %BUILD%/VGAGraphics.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/Panic.cpp -o %BUILD%/Panic.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Video.cpp -o %BUILD%/Video.o
 
 %LINKER% -m elf_i386 -T %SOURCES%/link.ld -o %BUILD%/Kernel-0 ^
     %BUILD%/kasm.o ^
@@ -52,6 +54,8 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/Driver.o ^
     %BUILD%/PS2Keyboard.o ^
     %BUILD%/VGAGraphics.o ^
+    %BUILD%/Panic.o ^
+    %BUILD%/Video.o ^
     %BUILD%/GDTasm.o ^
     %BUILD%/IDTasm.o ^
     %BUILD%/CPUasm.o ^
