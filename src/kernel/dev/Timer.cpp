@@ -8,7 +8,7 @@ namespace Dev::Timer{
 
     u32 tick = 0;
 
-    void timer_handler(u32 idx){
+    void timer_handler(CPU::Registers registers){
         tick++;
         CPU::end_of_interrupt(0x20);
     }

@@ -6,12 +6,14 @@ global interrupt_isr_%1
 extern interrupt_handler
 interrupt_isr_%1:
    cli           ; clear interrupts
+   push byte 0
+   push byte %1
    pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-   push byte 0   ; push a dummy error code
-   push byte %1  ; push the interrupt id
+   push eax
    call interrupt_handler
-   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+   pop eax
    popa                     ; Pops edi,esi,ebp...
+   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
    sti
    iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP          
 %endmacro

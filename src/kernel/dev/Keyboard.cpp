@@ -73,7 +73,7 @@ namespace Dev::Keyboard{
     }
 
     
-    void keyboard_handler(u32 idx){
+    void keyboard_handler(CPU::Registers registers){
         // KEYBOARD IN PORT     = 0X60
         // KEYBOARD STATUS PORT = 0x64
         // read from the keyboard in port

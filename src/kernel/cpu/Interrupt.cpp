@@ -5,9 +5,9 @@
 #include "IDT.h"
 
 // universal interrupt wrapper function
-extern "C" void interrupt_handler(u32 idx){
+extern "C" void interrupt_handler(CPU::Registers registers){
     // call the required interrupt
-    CPU::interrupts[idx](idx);
+    CPU::interrupts[registers.int_no](registers);
     return;
 }
 
@@ -50,7 +50,7 @@ extern "C" void interrupt_isr_35();
 
 namespace CPU{
 
-    void (*interrupts[256])(u32);
+    void (*interrupts[256])(Registers);
 
     void (*interrupts_isrs[])() = {
         interrupt_isr_0,
@@ -122,7 +122,7 @@ namespace CPU{
 
         setup_idt();
 
-        //register_interrupt(0, trap_handler, 0x08, 0x8E);
+        register_interrupt(0, trap_handler, 0x08, 0x8E);
         register_interrupt(1, trap_handler, 0x08, 0x8E);
         register_interrupt(2, trap_handler, 0x08, 0x8E);
         register_interrupt(3, trap_handler, 0x08, 0x8E);
@@ -144,7 +144,7 @@ namespace CPU{
         register_interrupt(19, trap_handler, 0x08, 0x8E);
     }
 
-    void register_interrupt(u32 idx, void(interrupt)(u32), u16 selector, u8 flags){
+    void register_interrupt(u32 idx, void(interrupt)(Registers), u16 selector, u8 flags){
         interrupts[idx]=interrupt;
         CPU::add_entry(idx, (u32)interrupts_isrs[idx], selector, flags);
     }
@@ -184,8 +184,8 @@ namespace CPU{
         IO::outb(port, value);  
     }
 
-    void trap_handler(u32 idx){
-        IO::kprint_str(exception_types[idx]);
+    void trap_handler(Registers registers){
+        IO::kprint_str(exception_types[registers.int_no]);
         IO::kprintf("\n");
         return;
     }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../Types.h"
+#include "../cpu/CPU.h"
+#include "../cpu/Interrupt.h"
 #include "Character.h"
 
 namespace Device{
@@ -15,6 +17,6 @@ namespace Dev{
     namespace Keyboard{
         extern const u8 keyboard_map[128];
         extern void init_keyboard();
-        extern void keyboard_handler(u32 idx);
+        extern void keyboard_handler(CPU::Registers registers);
     }
 }

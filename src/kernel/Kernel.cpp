@@ -57,7 +57,6 @@ int main(multiboot_info* multiboot_info, u32 magic){
     graphics.init();
     graphics.colour(Driver::VGAGraphics::vga_green);
     // graphics.scroll(5);
-
     
 
     for(;;) asm("hlt\n\t");
