@@ -15,6 +15,6 @@ namespace Memory{
 
     void memset(u32 ptr, u32 value, size size){
         for(u32 i=0;i<size;i++)
-            *((u32*)(ptr+i))=value;
+           *((u32*)(ptr+i))=value;
     }
 }

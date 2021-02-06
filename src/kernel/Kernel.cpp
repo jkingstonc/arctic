@@ -49,7 +49,6 @@ int main(multiboot_info* multiboot_info, u32 magic){
     CPU::setup_cpu();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
-    //Memory::setup_paging();
 
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
@@ -59,15 +58,15 @@ int main(multiboot_info* multiboot_info, u32 magic){
     graphics.colour(Driver::VGAGraphics::vga_green);
     // graphics.scroll(5);
     
-    // this shouldn't page fault as paging is not enabled
-    Memory::memset(0xfffffff0, '-', 5);
 
 
 
     Kernel::panic("test panic!\n");
-
-    asm volatile ("int $0x13"); 
     
+    Memory::setup_paging();
+    
+    // this should pagefault as paging is enabled
+    Memory::memset(0xfffffff0, '-', 5);
 
     for(;;) asm("hlt\n\t");
     return 0;
