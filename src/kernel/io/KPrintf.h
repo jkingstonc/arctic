@@ -23,6 +23,6 @@ namespace IO{
     void kprintf(const char * msg);
     void kprint_c(const char c);
     void kprint_int(int i);
-    void kprint_float(float f);
+    void kprint_f(float f, int prescision);
     void kprint_str(const char * str);
 }

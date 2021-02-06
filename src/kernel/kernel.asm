@@ -1,16 +1,32 @@
 ;;kernel.asm
 
 
+%define MEMORY_MAP 0x1
+%define PAGE_ALIGN 0x2
+%define VBE_ENABLE 0x4
+
 ;nasm directive - 32 bit
 bits 32
+
 
   
 section .multiboot
   ;multiboot1
   align 4
   dd 0x1BADB002                         ;magic
-  dd 0x00000001|0x00000002|0x00000004                  ;flags  (bit 1 set for memory map, bit 0 set for page aligning)
-  dd - (0x1BADB002 + (0x00000001|0x00000002|0x00000004)) ;checksum. m+f+c should be zero
+  dd MEMORY_MAP|PAGE_ALIGN|VBE_ENABLE                  ;flags  (bit 1 set for memory map, bit 0 set for page aligning)
+  dd - (0x1BADB002 + (MEMORY_MAP|PAGE_ALIGN|VBE_ENABLE)) ;checksum. m+f+c should be zero
+addrinfo_ignored:
+  dd 0
+  dd 0
+  dd 0
+  dd 0
+  dd 0
+videomode:
+  dd 0
+  dd 1920 ; VBE width
+  dd 1080 ; VBE height
+  dd 32   ; VBE pixel depth
 
   ; ; multiboot2 (qemu doesn't support yet!)
   ; header_start:

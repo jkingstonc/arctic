@@ -2,7 +2,7 @@
 
 namespace Memory{
 
-    extern u32 next_address = 0x0;
+    u32 next_address = 0x0;
 
     u32 kmalloc(size size, u1 align=0){
         // check if the next address is page aligned (4kb)
@@ -16,7 +16,6 @@ namespace Memory{
     }
 
     void kfree(u32 ptr){
-        return 0;
     }
 
 }

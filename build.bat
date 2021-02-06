@@ -64,7 +64,18 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/Memoryasm.o ^
     %BUILD%/Pagingasm.o
 
-objcopy -O elf32-i386 %BUILD%/Kernel-0 %BUILD%/Kernel-0.elf
-qemu-system-i386 -kernel ./build/Kernel-0
+mkdir -p %BUILD%
+mkdir -p %BUILD%/boot
+mkdir -p %BUILD%/boot/grub
+cp %SOURCES%/grub.cfg %BUILD%/boot/grub
+objcopy -O elf32-i386 %BUILD%/Arctic-0 %BUILD%/boot/Arctic-0
+
+if %1=="iso" (
+    REM wsl grub-mkrescue %BUILD% -o %BUILD%/boot/iso/Arctic-0.iso
+    qemu-system-i386 -cdrom %BUILD%/boot/Arctic-0.iso
+)
+if %1=="kernel" (
+    qemu-system-i386 -kernel %BUILD%/boot/Arctic-0
+)
 
 read

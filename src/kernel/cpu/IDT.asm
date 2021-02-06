@@ -9,9 +9,24 @@ interrupt_isr_%1:
    push byte 0 ; honestly not sure why this is needed...
    push byte %1
    pusha                    ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
-   push eax
+   
+   mov ax, ds               ; Lower 16-bits of eax = ds.
+   push eax                 ; save the data segment descriptor
+
+   mov ax, 0x10  ; load the kernel data segment descriptor
+   mov ds, ax
+   mov es, ax
+   mov fs, ax
+   mov gs, ax
+
    call interrupt_handler
-   pop eax
+   
+   pop eax        ; reload the original data segment descriptor
+   mov ds, ax
+   mov es, ax
+   mov fs, ax
+   mov gs, ax
+
    popa                     ; Pops edi,esi,ebp...
    add esp, 8     ; Cleans up the pushed error code and pushed ISR number
    sti

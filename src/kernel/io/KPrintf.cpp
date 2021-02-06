@@ -1,4 +1,6 @@
 #include "KPrintf.h"
+#include "../utils/Math.h"
+#include "../Types.h"
 
 extern "C" void kprint_test(int i){
 	IO::kprintf("test:\n");
@@ -135,7 +137,16 @@ namespace IO{
 		kprint_str(buffer);
 	}
     
-	void kprint_float(float f){}
+	void kprint_f(float f, int prescision){
+		// extract integer part
+		volatile s32 i_part = (s32)f;
+		// extraft float part
+		//float f_part = (float)f;
+
+		//kprint_int(i_part);
+		//kprint_c('.');
+		//kprint_int((int)(f_part*Utils::Math::pow(f_part, prescision)));
+	}
     
 	void kprint_str(const char * str){
 		for(int i = 0;str[i];i++)
