@@ -1,5 +1,6 @@
 #pragma once
 
+typedef void u0;
 typedef bool u1;
 typedef unsigned char u8;
 typedef char s8;

@@ -10,6 +10,7 @@
 #include "Types.h"
 #include "driver/PS2Keyboard.h"
 #include "driver/VGAGraphics.h"
+#include "driver/VBEGraphics.h"
 #include "utils/Optional.h"
 #include "Multiboot.h"
 #include "Panic.h"
@@ -56,35 +57,25 @@ int main(multiboot_info* multiboot_info, u32 magic){
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
     keyboard.init();
-    auto graphics = Driver::VGAGraphics();
-    graphics.init();
-    graphics.colour(Driver::VGAGraphics::vga_green);
-    // graphics.scroll(5);
-    
+    auto vga_graphics = Driver::VGAGraphics();
+    vga_graphics.init();
+    vga_graphics.colour(Driver::VGAGraphics::vga_green);
+    {
+        auto vbe_graphics = Driver::VBEGraphics(
+            (u32*)multiboot_info->framebuffer_addr,
+            (u32)multiboot_info->framebuffer_width,
+            (u32)multiboot_info->framebuffer_height,
+            (u8)multiboot_info->framebuffer_bpp
+        );
+        vbe_graphics.init();
+    }
 
-    auto framebuffer = (u32*) multiboot_info->framebuffer_addr;
-
-    IO::kinfo("framebuffer bbp: ");
-    IO::kprint_int((u32)multiboot_info->framebuffer_bpp);
-    IO::kprint_c('\n');
-
-    IO::kinfo("framebuffer address: ");
-    IO::kprint_int((u32)multiboot_info->framebuffer_addr);
-    IO::kprint_c('\n');
-
-    //for(int x =0;x<multiboot_info->framebuffer_width;x++)
-    //    for(int y =0;x<multiboot_info->framebuffer_height;y++)
-    //        framebuffer[y*multiboot_info->framebuffer_height + x]=0x992040;
-
-
-    Kernel::panic("test panic!\n");
-
-    
     Memory::setup_paging();
 
-    // this should pagefault as paging is enabled
-    //Memory::memset(0xfffffff0, '-', 5);
 
+    // this should page fault
+    u32 *ptr = (u32*)0xA0000000;
+    u32 do_page_fault = *ptr;
 
     for(;;) asm("hlt\n\t");
     return 0;

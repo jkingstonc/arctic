@@ -11,4 +11,5 @@ SECTIONS
      }
    .data BLOCK(4K) : ALIGN(4K) { *(.data) }
    .bss  BLOCK(4K) : ALIGN(4K) { *(.bss)  }
+   end_of_kernel = .; _end_of_kernel = .; __end_of_kernel = .;
  }

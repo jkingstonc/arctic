@@ -35,8 +35,9 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/Panic.cpp -o %BUILD%/Panic.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Video.cpp -o %BUILD%/Video.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/memory/KMalloc.cpp -o %BUILD%/KMalloc.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/driver/VBEGraphics.cpp -o %BUILD%/VBEGraphics.o
 
-%LINKER% -m elf_i386 -T %SOURCES%/link.ld -o %BUILD%/Kernel-0 ^
+%LINKER% -m elf_i386 -T %SOURCES%/link.ld -o %BUILD%/Arctic-0 ^
     %BUILD%/kasm.o ^
     %BUILD%/Kernel.o ^
     %BUILD%/KPrintf.o ^
@@ -62,11 +63,9 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/IDTasm.o ^
     %BUILD%/CPUasm.o ^
     %BUILD%/Memoryasm.o ^
-    %BUILD%/Pagingasm.o
+    %BUILD%/Pagingasm.o ^
+    %BUILD%/VBEGraphics.o
 
-mkdir -p %BUILD%
-mkdir -p %BUILD%/boot
-mkdir -p %BUILD%/boot/grub
 cp %SOURCES%/grub.cfg %BUILD%/boot/grub
 objcopy -O elf32-i386 %BUILD%/Arctic-0 %BUILD%/boot/Arctic-0
 

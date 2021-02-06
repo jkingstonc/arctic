@@ -91,7 +91,7 @@ namespace CPU{
         interrupt_isr_35,
     };
 
-    const char* exception_types[] = {
+    const char* exception_types[31] = {
         "Division By Zero",
         "Debug",
         "Non Maskable Interrupt",
@@ -198,6 +198,7 @@ namespace CPU{
     void trap_handler(Registers registers){
         IO::kprint_str(exception_types[registers.int_no]);
         IO::kprintf("\n");
+        CPU::end_of_interrupt(registers.int_no);
         return;
     }
 }

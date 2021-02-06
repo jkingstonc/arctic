@@ -1,18 +1,54 @@
 #include "KMalloc.h"
+#include "../io/KPrintf.h"
+
+// defined in the linker script, this is the address after the entire kernel
+extern u32 end_of_kernel;
 
 namespace Memory{
 
-    u32 next_address = 0x0;
+    // set the placement address to something big for now
+    u32 next_free_kernel_address = (u32)&end_of_kernel;
 
-    u32 kmalloc(size size, u1 align=0){
-        // check if the next address is page aligned (4kb)
-        if(align && (next_address&0xFFFF0000)){
-            next_address &= 0xFFFF0000;
-            next_address += 0x1000;
-        }
-        u32 addr = next_address;
-        next_address+=size;
+    // not aligned, and don't return the physical address
+    u32 kmalloc(size size){
+        u32 addr = next_free_kernel_address;
+        next_free_kernel_address+=size;
+        IO::kinfo("kmalloc, size=");
+        IO::kprint_int(size);
+        IO::kprint_str(", addr= ");
+        IO::kprint_int(addr);
+        IO::kprint_c('\n');
         return addr;
+    }
+
+    u32 kmalloc_special(size size, u1 align, u1 physical, u32* physical_addr){
+        // check if the next address is page aligned (4kb)
+        if(align && (next_free_kernel_address&0xFFFF0000)){
+            // align the next address to a 4kb page
+            next_free_kernel_address &= 0xFFFF0000;
+            // then increase the next address by 4kb
+            next_free_kernel_address += 0x1000;
+        }
+        // set the physical address
+        if(physical)
+            *physical_addr = next_free_kernel_address;
+        // get the next address
+        u32 addr = next_free_kernel_address;
+        // finally increase the next address by the size requested
+        next_free_kernel_address+=size;
+        return addr;
+    }
+
+    u32 kmalloc_aligned(size size){
+        return kmalloc_special(size, true, false, 0);
+    }
+
+    u32 kmalloc_physical(size size, u32* physical_addr){
+        return kmalloc_special(size, false, true, physical_addr);
+    }
+
+    u32 kmalloc_aligned__physical(size size, u32* physical_addr){
+        return kmalloc_special(size, true, true, physical_addr);
     }
 
     void kfree(u32 ptr){

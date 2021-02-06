@@ -112,6 +112,12 @@ namespace IO{
 
 	void kprint_int(int i){
 		char buffer[50];
+		if(i==0){
+			buffer[0]='0';
+			buffer[1]='\0';
+			IO::kprint_str(buffer);
+		}
+		
 		bool is_neg = i<0;
 		if(is_neg)i*=-1;
 		//!@TODO for integers larger than 10

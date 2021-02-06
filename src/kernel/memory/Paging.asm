@@ -18,7 +18,7 @@ enable_paging:
 
     ; set paging and protection bits in cr0
     mov eax, cr0
-    or eax, 0x80000011
+    or eax, 0x80000000
     mov cr0, eax
     
     ; enable 4MiB pages
