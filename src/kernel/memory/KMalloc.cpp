@@ -3,10 +3,12 @@
 
 // defined in the linker script, this is the address after the entire kernel
 // extern u32 end_of_kernel;
+extern u32 end_of_kernel;
 
 namespace Memory{
 
     u32 next_free_address = (u32)&end_of_kernel;
+    u32 end_of_kernel_address = (u32)&end_of_kernel;
 
     // not aligned, and don't return the physical address
     u32 kmalloc(size size){

@@ -31,11 +31,10 @@ namespace Memory{
     extern void set_page_dirt(u32* page, u32 value);
     extern void set_page_frame(u32* page, u32 value);
 
-    // contains an array of pages
+
     struct PageTable{
         u32 pages[1024];
-    }  __attribute__((aligned(4096)));
-
+    } __attribute__((aligned(4096)));
     // contains an array of page tables
     struct PageDirectory{
         // physical addresses of the page table entries
@@ -54,13 +53,14 @@ namespace Memory{
     extern void setup_paging();
 
 
-    extern PageDirectory* create_page_directory(u1 map_kernel);
+    extern PageDirectory* create_page_directory();
+    extern PageTable* create_page_table();
+    extern PageDirectory* create_kernel_page_directory();
     extern void set_active_page_directory(PageDirectory* page_directory);
 
 
     // return a pointer to a page
     extern u32* get_page(PageDirectory* page_directory, u32 physical_address, u1 make_if_not_found);
-    extern PageTable* get_page_table(PageDirectory* page_directory, u32 physical_address);
 
     // allocate a frame for a page
     extern u1 alloc_frame(u32* page, u1 user, u1 wr);

@@ -35,42 +35,17 @@ namespace Memory{
     void setup_paging(){
 
         CPU::register_interrupt(14, page_fault_handler, 0x08, 0x8E);
-        // // first setup the available frames bitmap
-        // // for now assume we have only 4GB of memory
-        // num_frames = 0xEE6B2800/0x1000;
-        // frame_bitmap = (u32*)kmalloc_aligned(num_frames/32);
-        // // clear the bitmap
-        // memset(frame_bitmap, 0, num_frames/32);
+        // first setup the available frames bitmap
+        // for now assume we have only 4GB of memory
+        num_frames = 0xEE6B2800/0x1000;
+        frame_bitmap = (u32*)kmalloc_aligned(num_frames/32);
+        // clear the bitmap
+        memset(frame_bitmap, 0, num_frames/32);
 
-        // IO::kinfo("available frames=");
-        // IO::kprint_int(num_frames);
-        // IO::kprint_c('\n');
-
-
-        auto page_directory = create_page_directory(false);
-        for(int i = 0;i<1024;i++){
-            page_directory->page_tables[0]=0x00000002;
-        }
-
-        auto page_table = (PageTable*)kmalloc_aligned(sizeof(PageTable));
-        memset(page_table, 0, sizeof(PageTable));
-        for(int i = 0;i<1024;i++){
-            //page_table->pages[i]=0x1000*i | 0x3;
-            set_page_present(&page_table->pages[i], 1);
-            set_page_rw(&page_table->pages[i], 1);
-            set_page_frame(&page_table->pages[i], 0x1000*i);
-        }
-        IO::kinfo("test=");
-        IO::kprint_int(get_page_frame(&page_table->pages[1]));
-        IO::kprint_c('\n');
-
-
-
-
-        page_directory->page_tables[0]= (u32)page_table | 0x3;
+        auto page_directory = create_kernel_page_directory();
         set_active_page_directory(page_directory);
 
-        // enable paging
+        //enable paging
         u32 cr0_value;
         asm volatile("mov %%cr0, %0": "=r"(cr0_value));
         cr0_value |= 0x80000000; // Enable paging!
@@ -91,78 +66,88 @@ namespace Memory{
         asm volatile("mov %0, %%cr3":: "r"((u32)page_directory));
     }
 
-    PageDirectory* create_page_directory(u1 map_kernel=false){
+    PageDirectory* create_page_directory(){
         PageDirectory* page_directory = (PageDirectory*)kmalloc_aligned(sizeof(PageDirectory));        // clear the page directory
         memset(page_directory, 0, sizeof(PageDirectory));
-        if(map_kernel){
-            // map the kernel into the page directory, every processes' page directory needs this
-            u32 i=0;
-            while(i<end_of_kernel){
-                alloc_frame(get_page(page_directory, i, true), 0, 1);
-                // increment i by the frame size
-                i+=0x1000;
-            }
+        for(u32 i=0;i<1024;i++){
+            page_directory->page_tables[i] = 0x00000002;
         }
+        return page_directory;
+    }
+
+    PageTable* create_page_table(){
+        PageTable* page_table = (PageTable*)kmalloc_aligned(sizeof(PageTable));
+        memset(page_table, 0, sizeof(PageTable));
+        return page_table;
+    }
+
+    PageDirectory* create_kernel_page_directory(){
+        PageDirectory* page_directory = create_page_directory();
+        PageTable* page_table = create_page_table();
+        for(u32 i=0;i<1024;i++){
+            set_page_present(&page_table->pages[i], 1);
+            set_page_rw(&page_table->pages[i], 1);
+            set_page_frame(&page_table->pages[i], 0x1000 * i);
+        }
+        page_directory->page_tables[0]=(u32)page_table | 0x3;
         return page_directory;
     }
 
     // return a page from a given physical address
     u32* get_page(PageDirectory* page_directory, u32 physical_address, u1 make_if_not_found){
-
         // turn the physical address into a page index
         u32 page_index = physical_address/0x1000;
         // get the corresponding page table
         u32 page_table_index = page_index/1024;
         // if the page table exists, then return the page
         if(page_directory->page_tables[page_table_index]!=0){
-            PageTable* page_table = (PageTable*)page_directory->page_tables[page_table_index];
-            return &page_table->pages[page_index%1024];
+            u32* page_table = (u32*)page_directory->page_tables[page_table_index];
+            return &page_table[page_index%1024];
         }else if(make_if_not_found){
-            u32 physical_table_address;
             // create a page table and page entry in the directory
             // allocate the page table and get the physical address of it
-            page_directory->page_tables[page_table_index] = kmalloc_physical(sizeof(PageTable), &physical_table_address);
-            // clear the page table
-            memset(&page_directory->page_tables[page_table_index], 0, 0x1000);
-            // now create a physical entry in the page directory
-            page_directory->page_tables[page_table_index] |= 0x7; // set the entry to present, read write and kernel space
-            // return the page entry within the table
-            PageTable* page_table = (PageTable*)page_directory->page_tables[page_table_index];
+            u32 page_table = kmalloc_aligned(sizeof(u32)*1024);
             
+            IO::kinfo("creating page table=");
+            IO::kprint_int(page_table);
+            IO::kprint_c('\n');
+
+            // now create a physical entry in the page directory
+            page_directory->page_tables[page_table_index] = page_table | 0x3; // set the entry to present and r+w
+            IO::kinfo("first page index=");
+            IO::kprint_int(page_index%1024);
+            IO::kprint_c('\n');
             // return the page at the given page table
-            return &page_table->pages[page_index%1024];
+            return &((u32*)page_table)[page_index%1024];
         }
+        Kernel::panic(__FILE__, __LINE__, "cannot get page, doesn't exist and we are not creating it");
         return 0;
-    }
-
-
-    PageTable* get_page_table(PageDirectory* page_directory, u32 physical_address){
-        // to get the table index, first divide by the frame size, then the number of frames per table
-        u32 table_index = (physical_address/0x1000)/1024;
-        if(page_directory->page_tables[table_index]==0)
-            return 0;
-        return (PageTable*)page_directory->page_tables[table_index];
     }
 
     // allocate a frame for a page
     u1 alloc_frame(u32* page, u1 user, u1 wr){
-        // if the page has already been allocated a frame return
-        if(get_page_frame(page)!=0){
-            //IO::kwarn("page frame allocation failed: frame already set\n");
-            return false;
-        }
+        //!@TODO get_page_frame doesn't work
+        //// if the page has already been allocated a frame return
+        // if(get_page_frame(page)!=0){
+        //     IO::kwarn("page frame allocation failed: frame already set\n");
+        //     return false;
+        // }
         // get the next free frame
+
         u32 frame_index = next_free_frame();
+        IO::kinfo("allocating frame=");
+        IO::kprint_int(frame_index*0x1000);
+        IO::kprint_c('\n');
         if(frame_index==(u32)-1){
             Kernel::panic(__FILE__, __LINE__, "page frame allocation failed: no free frames left!\n");
             return false;
         }
         // claim the frame
         set_frame_used(frame_index*0x1000);
-        set_page_frame(page, frame_index*0x1000);
         set_page_present(page, 1);
         set_page_rw(page, (wr==true)?1:0);
-        set_page_usermode(page, (user==true)?1:0);     
+        set_page_usermode(page, (user==true)?1:0);
+        set_page_frame(page, frame_index*0x1000);    
         return true;
     }
 
@@ -240,7 +225,7 @@ namespace Memory{
         return *page & 0x16 >> 4;
     }
     u32 get_page_frame(u32* page){
-        return (*page & 0xFFFFF000) >> 12;
+        return *page & 0xFFFFF000;
     }
     void set_page_present(u32* page, u32 value){
         *page |= value;
@@ -258,7 +243,6 @@ namespace Memory{
         *page |= value << 4;
     }
     void set_page_frame(u32* page, u32 value){
-        // !@TODO this doesn't make sense, it should be value << 12 as the top 20 bits are the physical frame address
         *page |= value;
     }
 }
