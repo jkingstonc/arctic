@@ -45,6 +45,11 @@ namespace Memory{
         auto page_directory = create_kernel_page_directory();
         set_active_page_directory(page_directory);
 
+
+
+        u32* page = get_page(page_directory, 0x0, false);
+        IO::kprint_int(get_page_present(page));     
+
         //enable paging
         u32 cr0_value;
         asm volatile("mov %%cr0, %0": "=r"(cr0_value));
@@ -70,6 +75,7 @@ namespace Memory{
         PageDirectory* page_directory = (PageDirectory*)kmalloc_aligned(sizeof(PageDirectory));        // clear the page directory
         memset(page_directory, 0, sizeof(PageDirectory));
         for(u32 i=0;i<1024;i++){
+            // set the page table to not present, kernel mode and r+w
             page_directory->page_tables[i] = 0x00000002;
         }
         return page_directory;
@@ -101,24 +107,19 @@ namespace Memory{
         u32 page_table_index = page_index/1024;
         // if the page table exists, then return the page
         if(page_directory->page_tables[page_table_index]!=0){
-            u32* page_table = (u32*)page_directory->page_tables[page_table_index];
-            return &page_table[page_index%1024];
+            //PageTable* page_table = (PageTable*)page_directory->page_tables[page_table_index];
+            u32 page_table_entry = page_directory->page_tables[page_table_index];
+            // the actual page table address is the top 20 bits of the entry
+            PageTable* page_table = (PageTable*)(page_table_entry & 0xFFFFF000);
+            return &page_table->pages[page_index%1024];
         }else if(make_if_not_found){
             // create a page table and page entry in the directory
             // allocate the page table and get the physical address of it
-            u32 page_table = kmalloc_aligned(sizeof(u32)*1024);
-            
-            IO::kinfo("creating page table=");
-            IO::kprint_int(page_table);
-            IO::kprint_c('\n');
-
+            PageTable* page_table = (PageTable*)kmalloc_aligned(sizeof(u32)*1024);
             // now create a physical entry in the page directory
-            page_directory->page_tables[page_table_index] = page_table | 0x3; // set the entry to present and r+w
-            IO::kinfo("first page index=");
-            IO::kprint_int(page_index%1024);
-            IO::kprint_c('\n');
+            page_directory->page_tables[page_table_index] = (u32)page_table | 0x3; // set the entry to present and r+w
             // return the page at the given page table
-            return &((u32*)page_table)[page_index%1024];
+            return &page_table->pages[page_index%1024];
         }
         Kernel::panic(__FILE__, __LINE__, "cannot get page, doesn't exist and we are not creating it");
         return 0;
@@ -213,19 +214,19 @@ namespace Memory{
         return *page & 0x1;
     }
     u32 get_page_rw(u32* page){
-        return *page & 0x2 >> 1;
+        return (*page & 0x2) >> 1;
     }
     u32 get_page_usermode(u32* page){
-        return *page & 0x4 >> 2;
+        return (*page & 0x4) >> 2;
     }
     u32 get_page_accessed(u32* page){
-        return *page & 0x8 >> 3;
+        return (*page & 0x8) >> 3;
     }
     u32 get_page_dirt(u32* page){
-        return *page & 0x16 >> 4;
+        return (*page & 0x16) >> 4;
     }
     u32 get_page_frame(u32* page){
-        return *page & 0xFFFFF000;
+        return (*page & 0xFFFFF000);
     }
     void set_page_present(u32* page, u32 value){
         *page |= value;
