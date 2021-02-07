@@ -12,5 +12,6 @@ namespace CPU{
         // Pushed by the processor automatically.
         u32 eip, cs, eflags, useresp, ss;
     };
-    void setup_cpu();
+    void setup_descriptor_tables();
+    void setup_protected_mode();
 }

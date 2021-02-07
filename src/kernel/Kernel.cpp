@@ -49,10 +49,13 @@ int main(multiboot_info* multiboot_info, u32 magic){
             IO::kprint_c('\n');
         }
     }
-    /// Memory::get_available_memory();
-    CPU::setup_cpu();
+    
+    CPU::setup_descriptor_tables();
+    CPU::setup_protected_mode();
+    Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
+    
 
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
@@ -70,12 +73,11 @@ int main(multiboot_info* multiboot_info, u32 magic){
         vbe_graphics.init();
     }
 
-    Memory::setup_paging();
 
 
-    // this should page fault
-    u32 *ptr = (u32*)0xA0000000;
-    u32 do_page_fault = *ptr;
+    // // this should page fault
+    // u32 *ptr = (u32*)0xA0000000;
+    // u32 do_page_fault = *ptr;
 
     for(;;) asm("hlt\n\t");
     return 0;

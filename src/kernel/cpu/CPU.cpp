@@ -7,12 +7,15 @@
 extern "C" void enter_protected();
 
 namespace CPU{
-    void setup_cpu(){
+    void setup_descriptor_tables(){
         setup_gdt();
         IO::kinfo("GDT initialised\n");
-        enter_protected();
-        IO::kinfo("Entered 32-bit protected mode\n");
         setup_interrupts();
         IO::kinfo("IDT initialised\n");
+    }
+
+    void setup_protected_mode(){
+        enter_protected();
+        IO::kinfo("entered 32-bit protected mode\n");
     }
 }
