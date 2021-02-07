@@ -24,8 +24,8 @@ addrinfo_ignored:
   dd 0
 videomode:
   dd 0
-  dd 1920 ; VBE width
-  dd 1080 ; VBE height
+  dd 1280 ; VBE width
+  dd 720 ; VBE height
   dd 32   ; VBE pixel depth
 
   ; ; multiboot2 (qemu doesn't support yet!)

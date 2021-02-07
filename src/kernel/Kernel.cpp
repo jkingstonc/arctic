@@ -12,6 +12,7 @@
 #include "driver/VGAGraphics.h"
 #include "driver/VBEGraphics.h"
 #include "utils/Optional.h"
+#include "utils/Math.h"
 #include "Multiboot.h"
 #include "Panic.h"
 
@@ -52,7 +53,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     
     CPU::setup_descriptor_tables();
     CPU::setup_protected_mode();
-    Memory::setup_paging();
+    //Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
     
@@ -71,7 +72,17 @@ int main(multiboot_info* multiboot_info, u32 magic){
             (u8)multiboot_info->framebuffer_bpp
         );
         vbe_graphics.init();
+        vbe_graphics.clear(0xFF);
+
+
+            for(u32 i=0;i<100;i++){
+                for(u32 j=0;j<100;j++){
+                    vbe_graphics.write_pixel(i, j, 0xFF00FFFF);
+                }
+            }
     }
+
+
 
 
 

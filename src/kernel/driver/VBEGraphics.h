@@ -12,6 +12,10 @@ namespace Driver{
         ~VBEGraphics();
         void init() override;
         void close() override;
+        void clear(u32 colour);
+        u32 width();
+        u32 height();
+        u32 pixel_depth();
         void write_pixel(u32 x, u32 y, u32 value);
         u32 read_pixel(u32 x, u32 y);
     private:

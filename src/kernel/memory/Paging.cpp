@@ -128,17 +128,13 @@ namespace Memory{
     // allocate a frame for a page
     u1 alloc_frame(u32* page, u1 user, u1 wr){
         //!@TODO get_page_frame doesn't work
-        //// if the page has already been allocated a frame return
-        // if(get_page_frame(page)!=0){
-        //     IO::kwarn("page frame allocation failed: frame already set\n");
-        //     return false;
-        // }
+        // if the page has already been allocated a frame return
+        if(get_page_frame(page)!=0){
+            IO::kwarn("page frame allocation failed: frame already set\n");
+            return false;
+        }
         // get the next free frame
-
         u32 frame_index = next_free_frame();
-        IO::kinfo("allocating frame=");
-        IO::kprint_int(frame_index*0x1000);
-        IO::kprint_c('\n');
         if(frame_index==(u32)-1){
             Kernel::panic(__FILE__, __LINE__, "page frame allocation failed: no free frames left!\n");
             return false;
