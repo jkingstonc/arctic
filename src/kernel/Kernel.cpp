@@ -15,6 +15,8 @@
 #include "utils/Math.h"
 #include "Multiboot.h"
 #include "Panic.h"
+#include "utils/string.h"
+#include "utils/SStream.h"
 
 
 void welcome_msg(){
@@ -53,7 +55,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     
     CPU::setup_descriptor_tables();
     CPU::setup_protected_mode();
-    //Memory::setup_paging();
+    Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
     
@@ -84,11 +86,12 @@ int main(multiboot_info* multiboot_info, u32 magic){
 
 
 
-
-
-    // // this should page fault
-    // u32 *ptr = (u32*)0xA0000000;
-    // u32 do_page_fault = *ptr;
+    String s1("one ");
+    String s2("two");
+    String s3("three");
+    StringStream ss;
+    ss << s1 << s2 << s3;
+    IO::kinfo(ss.str());
 
     for(;;) asm("hlt\n\t");
     return 0;

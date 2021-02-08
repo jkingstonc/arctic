@@ -25,6 +25,12 @@ namespace IO{
 		kprintf(info);
 	}
 
+	void kinfo(String info){
+		kcolour(VGACyan);
+		kprintf("[INFO] ");
+		kprintf(info);
+	}
+
 	void kwarn(const char * warn){
 		kcolour(VGAMagenta);
 		kprintf("[WARNING] ");
@@ -85,6 +91,9 @@ namespace IO{
 				}
 			}
 		}
+	}
+	void kprintf(String msg){
+		kprintf(msg.cstr());
 	}
 
 	void kprint_c(const char c){

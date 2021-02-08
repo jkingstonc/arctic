@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../utils/String.h"
+
 #define LINES     25
 #define COLS      80
 #define PIX_BYTES 2
@@ -24,12 +26,14 @@ namespace IO{
     extern int idx;
     extern char * vid_mem;
     void kinfo(const char * info);
+    void kinfo(String info);
     void kwarn(const char * war);
     void kerr(const char * err);
     void k_cursor_pos(int x, int y);
     void kclear();
     void kcolour(int colour);
     void kprintf(const char * msg);
+    void kprintf(String msg);
     void kprint_c(const char c);
     void kprint_int(int i);
     void kprint_f(float f, int prescision);
