@@ -9,6 +9,15 @@
 #define RED   0x4
 
 namespace IO{
+
+    // used for debugging
+    class DbgStream{
+    public:
+        DbgStream* operator<<(char *s);
+        DbgStream* operator<<(int *i);
+    };
+
+
     extern const int VGAGreen;
     extern const int VGACyan;
     extern const int VGARed;

@@ -18,9 +18,9 @@ namespace Driver{
         return m_pixel_depth;
     }
     void VBEGraphics::clear(u32 colour){
-        for(u32 x=0;x<m_width;x++){
-            for(u32 y=0;y<m_width;y++){
-                write_pixel(x, y, colour);
+        for(u32 y=0;y<m_height;y++){
+            for(u32 x=0;x<m_width;x++){
+                    write_pixel(x, y, colour);
             }
         }
     }

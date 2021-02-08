@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "exception": "cpp",
+        "string": "cpp",
+        "xstring": "cpp"
+    }
+}
