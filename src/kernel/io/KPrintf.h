@@ -29,9 +29,7 @@ namespace IO{
     void kinfo(String info);
     void kwarn(const char * war);
     void kerr(const char * err);
-    void k_cursor_pos(int x, int y);
     void kclear();
-    void kcolour(int colour);
     void kprintf(const char * msg);
     void kprintf(String msg);
     void kprint_c(const char c);

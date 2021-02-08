@@ -1,71 +1,28 @@
 #include "KPrintf.h"
 #include "../utils/Math.h"
 #include "../Types.h"
-
-extern "C" void kprint_test(int i){
-	IO::kprintf("test:\n");
-	IO::kprint_int(i);
-}
+#include "../driver/VGAGraphics.h"
 
 namespace IO{
 
-    const int VGAGreen   = 0x2;
-    const int VGACyan    = 0x3;
-    const int VGARed     = 0x4;
-    const int VGAMagenta = 0x5;
-
-	int idx = 0;
-	char * vid_mem = (char*)0xb8000;
-	int k_colour = 0;
-
-
 	void kinfo(const char * info){
-		kcolour(VGACyan);
-		kprintf("[INFO] ");
-		kprintf(info);
-	}
-
-	void kinfo(String info){
-		kcolour(VGACyan);
+		Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_green);
 		kprintf("[INFO] ");
 		kprintf(info);
 	}
 
 	void kwarn(const char * warn){
-		kcolour(VGAMagenta);
+		Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
 		kprintf("[WARNING] ");
 		kprintf(warn);
 	}
 
 	void kerr(const char * err){
-		kcolour(VGARed);
+		Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
 		kprintf("[ERROR] ");
 		kprintf(err);
 	}
-
-	void kclear(){
-		idx = 0;
-		unsigned int j = 0;
-
-		/* this loops clears the screen
-		* there are 25 lines each of 80 columns; each element takes 2 bytes */
-		while(j < COLS * LINES * PIX_BYTES) {
-			/* blank character */
-			vid_mem[j] = ' ';
-			/* attribute-byte - light grey on black screen */
-			vid_mem[j+1] = 0x07; 		
-			j = j + PIX_BYTES;
-		}
-	}
-
-	void k_cursor_pos(int x, int y){
-		idx = x + (COLS*y);
-	}
-
-    void kcolour(int colour){
-		k_colour = colour;
-	}
-
+	
 	void kprintf(const char * msg){
 		unsigned int j = 0;
 		/* this loop writes the string to video memory */
@@ -97,24 +54,9 @@ namespace IO{
 	}
 
 	void kprint_c(const char c){
-		if(idx >= (COLS*LINES*2))
-			idx = 0;
 		switch(c){
-			case '\n': {
-				// calculate how far we are along the line
-				int line_idx = (idx/PIX_BYTES) % COLS;
-				// move to the start of the next line
-				idx+= ((COLS-line_idx)*PIX_BYTES);
-				break;
-			}
-			case '\t': {
-				idx+= (4*PIX_BYTES);
-				break;
-			}
 			default:{
-				vid_mem[idx]=c;
-				vid_mem[idx+1]=k_colour;
-				idx+=2;
+				Driver::VGAGraphics::vga_driver.putc(c);
 			}
 		}
 	}

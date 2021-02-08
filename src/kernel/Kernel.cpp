@@ -35,8 +35,10 @@ void welcome_msg(){
 // https://stackoverflow.com/questions/44187648/how-to-pass-parameters-to-kernel-using-grub-0-97-menu-lst
 // entry point for the kernel
 int main(multiboot_info* multiboot_info, u32 magic){
-    IO::kclear();
-    IO::kcolour(IO::VGACyan);
+    Driver::VGAGraphics::vga_driver.clear(0);
+    Driver::VGAGraphics::vga_driver.init();
+
+
     if(multiboot_info->flags&1){
         IO::kinfo("multiboot info received!\n");
         IO::kinfo("memory (GB): ");
@@ -55,7 +57,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     
     CPU::setup_descriptor_tables();
     CPU::setup_protected_mode();
-    Memory::setup_paging();
+    //Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
     
@@ -63,9 +65,11 @@ int main(multiboot_info* multiboot_info, u32 magic){
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
     keyboard.init();
-    auto vga_graphics = Driver::VGAGraphics();
-    vga_graphics.init();
-    vga_graphics.colour(Driver::VGAGraphics::vga_green);
+
+
+
+
+    Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
     {
         auto vbe_graphics = Driver::VBEGraphics(
             (u32*)multiboot_info->framebuffer_addr,
@@ -85,13 +89,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     }
 
 
-
-    String s1("one ");
-    String s2("two");
-    String s3("three");
-    StringStream ss;
-    ss << s1 << s2 << s3;
-    IO::kinfo(ss.str());
+    IO::kinfo("one two threeeeee!!");
 
     for(;;) asm("hlt\n\t");
     return 0;
