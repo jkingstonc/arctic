@@ -1,10 +1,11 @@
 #include "Panic.h"
-
+#include "Kernel.h"
 #include "io/KPrintf.h"
 #include "dev/Video.h"
 
 namespace Kernel{
     u8 panic(const char* file, u32 line, const char* msg){
+        dbg() << "kernel panic: " << msg << "\n";
         // set video mode VGA
         Device::set_video_mode(Device::VideoMode::VGA);
         IO::kerr("KERNEL PANIC\n");

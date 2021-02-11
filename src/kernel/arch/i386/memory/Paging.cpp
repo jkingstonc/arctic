@@ -4,6 +4,7 @@
 #include "../../../io/KPrintf.h"
 #include "../../../memory/KMalloc.h"
 #include "../../../Panic.h"
+#include "../../../Kernel.h"
 
 extern "C" void enable_paging(u32 page_directory);
 
@@ -47,7 +48,6 @@ namespace Memory{
 
 
         u32* page = get_page(page_directory, 0x0, false);
-        IO::kprint_int(get_page_present(page));     
 
         //enable paging
         u32 cr0_value;
@@ -61,8 +61,7 @@ namespace Memory{
         cr4_value |= 0x00000010;
         asm volatile("mov %0, %%cr4":: "r"(cr4_value));
 
-
-        IO::kprintf("[INFO] enabled paging\n");
+        dbg() << "setup i386 paging\n";
     }
 
     void set_active_page_directory(PageDirectory* page_directory){

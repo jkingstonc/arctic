@@ -3,6 +3,7 @@
 #include "IDT.h"
 #include "Interrupt.h"
 #include "../../../io/KPrintf.h"
+#include "../../../Kernel.h"
 
 extern "C" void enter_protected();
 
@@ -12,6 +13,6 @@ namespace CPU{
         setup_idt();
         setup_interrupts();
         enter_protected();
-        IO::kinfo("CPU initialised\n");
+        dbg() << "setup i386 cpu\n";
     }
 }

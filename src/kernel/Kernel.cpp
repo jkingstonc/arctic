@@ -17,12 +17,39 @@
 #include "utils/string.h"
 #include "io/Serial.h"
 #include "utils/SStream.h"
+#include "utils/Numeric.h"
 
 
-void assert(u1 expression, const char* msg){
+DbgStream dbg_stream;
+
+DbgStream::DbgStream(){
+}
+DbgStream::DbgStream(u16 port){
+    m_port = port;
+}
+
+void assert(u1 expression, u32 line, const char* file, const char* msg){
     if(!expression){
-
+        dbg() << "ASSERTION FAILED: " << line << ":" << file << "=" << msg;
     }
+}
+
+DbgStream& operator<<(DbgStream& ds, const char* s) {
+    for(u32 i=0;s[i];i++)
+        IO::write_serial(ds.m_port, s[i]);
+    return ds;
+} 
+
+DbgStream& operator<<(DbgStream& ds, s32 s){
+    char buffer[50];
+    itoa(s, buffer);
+    for(u32 i=0;buffer[i];i++)
+        IO::write_serial(ds.m_port, buffer[i]);
+    return ds;
+}
+
+DbgStream& dbg(){
+    return dbg_stream;
 }
 
 void welcome_msg(){
@@ -45,6 +72,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     Driver::VGAGraphics::vga_driver.clear(0);
     Driver::VGAGraphics::vga_driver.init();
 
+    dbg_stream = DbgStream(COM1);
 
     if(multiboot_info->flags&1){
         IO::kinfo("multiboot info received!\n");
@@ -69,7 +97,6 @@ int main(multiboot_info* multiboot_info, u32 magic){
     Dev::Timer::init_timer(1);
     IO::setup_serial();
 
-    IO::dbg("hello world!\n");
 
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
@@ -90,15 +117,14 @@ int main(multiboot_info* multiboot_info, u32 magic){
         vbe_graphics.clear(0xFF);
 
 
-            for(u32 i=0;i<100;i++){
-                for(u32 j=0;j<100;j++){
-                    vbe_graphics.write_pixel(i, j, 0xFF00FFFF);
-                }
+        for(u32 i=0;i<100;i++){
+            for(u32 j=0;j<100;j++){
+                vbe_graphics.write_pixel(i, j, 0xFF00FFFF);
             }
+        }
     }
 
-    welcome_msg();
-
+    dbg() << "kernel booted\n";
 
     for(;;) asm("hlt\n\t");
     return 0;
