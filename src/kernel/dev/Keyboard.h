@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../Types.h"
-#include "../cpu/CPU.h"
-#include "../cpu/Interrupt.h"
+#include "../arch/i386/cpu/CPU.h"
+#include "../arch/i386/cpu/Interrupt.h"
 #include "Character.h"
 
 namespace Device{

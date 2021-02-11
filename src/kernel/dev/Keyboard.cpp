@@ -1,8 +1,8 @@
 #include "Keyboard.h"
 #include "../io/Port.h"
 #include "../io/KPrintf.h"
-#include "../cpu/IDT.h"
-#include "../cpu/Interrupt.h"
+#include "../arch/i386/cpu/IDT.h"
+#include "../arch/i386/cpu/Interrupt.h"
 
 
 

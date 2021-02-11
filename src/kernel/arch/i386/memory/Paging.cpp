@@ -1,12 +1,11 @@
 #include "Paging.h"
 #include "../cpu/Interrupt.h"
-#include "Memory.h"
-#include "../io/KPrintf.h"
-#include "KMalloc.h"
-#include "../Panic.h"
+#include "../../../utils/Mem.h"
+#include "../../../io/KPrintf.h"
+#include "../../../memory/KMalloc.h"
+#include "../../../Panic.h"
 
 extern "C" void enable_paging(u32 page_directory);
-
 
 namespace Memory{
     

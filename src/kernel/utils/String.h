@@ -20,5 +20,4 @@ private:
     u32 m_allocated = 0;
 };
 
-
 u32 strlen(const char* s);

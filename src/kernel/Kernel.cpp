@@ -1,10 +1,12 @@
 
 
+
+
+#include "cpu/CPU.h"
 #include "io/KPrintf.h"
 #include "shell/Shell.h"
 #include "memory/Memory.h"
 #include "memory/Paging.h"
-#include "cpu/CPU.h"
 #include "dev/Keyboard.h"
 #include "dev/Timer.h"
 #include "Types.h"
@@ -20,14 +22,15 @@
 
 
 void welcome_msg(){
-    IO::kinfo("   #   \n");
-    IO::kinfo("  # #  \n");
-    IO::kinfo(" #   # \n");
-    IO::kinfo("#     #\n");
-    IO::kinfo("#######\n");
-    IO::kinfo("#     #\n");
-    IO::kinfo("#     #\n");
-    IO::kinfo("\n");
+    IO::kinfo("_________________\n");
+    // IO::kinfo("|               |\n");
+    // IO::kinfo("|      ###      |\n");
+    // IO::kinfo("|     ## ##     |\n");
+    // IO::kinfo("|    ##   ##    |\n");
+    // IO::kinfo("|   #########   |\n");
+    // IO::kinfo("|  ##       ##  |\n");
+    // IO::kinfo("| ##         ## |\n");
+    // IO::kinfo("|_______________|\n\n");
     IO::kinfo("welcome to arctic OS\n");
 }
 
@@ -55,9 +58,9 @@ int main(multiboot_info* multiboot_info, u32 magic){
         }
     }
     
-    CPU::setup_descriptor_tables();
-    CPU::setup_protected_mode();
-    //Memory::setup_paging();
+    CPU::setup_cpu();
+
+    Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
     
@@ -88,8 +91,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
             }
     }
 
-
-    IO::kinfo("one two threeeeee!!");
+    welcome_msg();
 
     for(;;) asm("hlt\n\t");
     return 0;
