@@ -1,7 +1,4 @@
-
-
-
-
+#include "Kernel.h"
 #include "cpu/CPU.h"
 #include "io/KPrintf.h"
 #include "shell/Shell.h"
@@ -18,8 +15,15 @@
 #include "Multiboot.h"
 #include "Panic.h"
 #include "utils/string.h"
+#include "io/Serial.h"
 #include "utils/SStream.h"
 
+
+void assert(u1 expression, const char* msg){
+    if(!expression){
+
+    }
+}
 
 void welcome_msg(){
     IO::kinfo("_________________\n");
@@ -63,7 +67,9 @@ int main(multiboot_info* multiboot_info, u32 magic){
     Memory::setup_paging();
     Dev::Keyboard::init_keyboard();
     Dev::Timer::init_timer(1);
-    
+    IO::setup_serial();
+
+    IO::dbg("hello world!\n");
 
     // setup some dummy drivers
     auto keyboard = Driver::PS2Keyboard();
@@ -92,6 +98,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     }
 
     welcome_msg();
+
 
     for(;;) asm("hlt\n\t");
     return 0;

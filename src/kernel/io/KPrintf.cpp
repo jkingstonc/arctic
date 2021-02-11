@@ -2,8 +2,17 @@
 #include "../utils/Math.h"
 #include "../Types.h"
 #include "../driver/VGAGraphics.h"
+#include "Serial.h"
 
 namespace IO{
+
+
+
+	void dbg(const char* msg){
+		for(u32 i=0;msg[i];i++){
+			IO::write_serial(COM1, msg[i]);
+		}
+	}
 
 	void kinfo(const char * info){
 		Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_green);

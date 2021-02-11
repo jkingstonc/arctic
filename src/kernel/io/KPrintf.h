@@ -12,12 +12,19 @@
 
 namespace IO{
 
+
+
+
     // used for debugging
     class DbgStream{
     public:
         DbgStream* operator<<(char *s);
         DbgStream* operator<<(int *i);
     };
+
+
+
+    void dbg(const char* msg);
 
 
     extern const int VGAGreen;

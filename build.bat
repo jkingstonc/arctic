@@ -25,6 +25,7 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/KPrintf.cpp -o %BUILD%/KPrintf.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/shell/Shell.cpp -o %BUILD%/Shell.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/Port.cpp -o %BUILD%/Port.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/Serial.cpp -o %BUILD%/Serial.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Keyboard.cpp -o %BUILD%/Keyboard.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Character.cpp -o %BUILD%/Character.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/dev/Device.cpp -o %BUILD%/Device.o
@@ -74,6 +75,7 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/String.o ^
     %BUILD%/SStream.o ^
     %BUILD%/Numeric.o ^
+    %BUILD%/Serial.o ^
     %BUILD%/Mem.o 
 
 cp %SOURCES%/grub.cfg %BUILD%/boot/grub
@@ -81,10 +83,10 @@ objcopy -O elf32-i386 %BUILD%/Arctic-0 %BUILD%/boot/Arctic-0
 
 if %1=="iso" (
     REM wsl grub-mkrescue %BUILD% -o %BUILD%/boot/iso/Arctic-0.iso
-    qemu-system-i386 -cdrom %BUILD%/boot/Arctic-0.iso
+    qemu-system-i386 -cdrom %BUILD%/boot/Arctic-0.iso -serial stdio
 )
 if %1=="kernel" (
-    qemu-system-i386 -kernel %BUILD%/boot/Arctic-0
+    qemu-system-i386 -kernel %BUILD%/boot/Arctic-0 -serial stdio
 )
 
 read
