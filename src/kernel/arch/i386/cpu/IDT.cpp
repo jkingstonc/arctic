@@ -1,5 +1,5 @@
 #include "IDT.h"
-#include "Interrupt.h"
+#include "I386Interrupt.h"
 #include "../../../io/KPrintf.h"
 #include "../../../io/Port.h"
 

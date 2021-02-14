@@ -17,9 +17,9 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/Kernel.cpp -o %BUILD%/Kernel.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/IDT.cpp -o %BUILD%/IDT.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/GDT.cpp -o %BUILD%/GDT.o
-%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/CPU.cpp -o %BUILD%/CPU.o
-%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/Interrupt.cpp -o %BUILD%/Interrupt.o
-%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/memory/Paging.cpp -o %BUILD%/Paging.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/I386CPU.cpp -o %BUILD%/I386CPU.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/i386Interrupt.cpp -o %BUILD%/I386Interrupt.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/memory/I386Paging.cpp -o %BUILD%/I386Paging.o
 
 
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/KPrintf.cpp -o %BUILD%/KPrintf.o
@@ -49,11 +49,11 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/KPrintf.o ^
     %BUILD%/Shell.o ^
     %BUILD%/Port.o ^
-    %BUILD%/Interrupt.o ^
+    %BUILD%/I386Interrupt.o ^
     %BUILD%/IDT.o ^
     %BUILD%/GDT.o ^
-    %BUILD%/CPU.o ^
-    %BUILD%/Paging.o ^
+    %BUILD%/I386CPU.o ^
+    %BUILD%/I386Paging.o ^
     %BUILD%/Keyboard.o ^
     %BUILD%/Device.o ^
     %BUILD%/Character.o ^

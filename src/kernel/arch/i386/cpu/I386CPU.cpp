@@ -1,7 +1,7 @@
-#include "CPU.h"
+#include "I386CPU.h"
 #include "GDT.h"
 #include "IDT.h"
-#include "Interrupt.h"
+#include "I386Interrupt.h"
 #include "../../../io/KPrintf.h"
 #include "../../../Kernel.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Types.h"
-#include "../cpu/CPU.h"
+#include "../cpu/I386CPU.h"
 
 namespace Memory{
 

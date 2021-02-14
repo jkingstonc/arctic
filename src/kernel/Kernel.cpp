@@ -19,6 +19,9 @@
 #include "utils/SStream.h"
 #include "utils/Numeric.h"
 
+#include "cpu/InterruptService.h"
+#include "cpu/Interrupt.h"
+
 
 DbgStream dbg_stream;
 
@@ -102,6 +105,10 @@ int main(multiboot_info* multiboot_info, u32 magic){
     auto keyboard = Driver::PS2Keyboard();
     keyboard.init();
 
+
+
+    auto kb = Device::Keyboard();
+    register_interrupt(&kb);
 
 
 

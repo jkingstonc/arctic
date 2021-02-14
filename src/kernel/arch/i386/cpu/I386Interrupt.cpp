@@ -1,8 +1,9 @@
-#include "Interrupt.h"
+#include "I386Interrupt.h"
 #include "../../../io/KPrintf.h"
 #include "../../../io/Port.h"
 #include "../../../dev/Keyboard.h"
 #include "IDT.h"
+#include "../../../cpu/InterruptService.h"
 
 // universal interrupt wrapper function
 extern "C" void interrupt_handler(CPU::Registers registers){
@@ -155,6 +156,10 @@ namespace CPU{
     void register_interrupt(u32 idx, void(interrupt)(Registers), u16 selector, u8 flags){
         interrupts[idx]=interrupt;
         CPU::add_entry(idx, (u32)interrupts_isrs[idx], selector, flags);
+    }
+
+    void register_interrupt(InterruptService* interrupt_service){
+        dbg() << "register_interrupt = " << interrupt_service->interrupt_idx() << "\n";
     }
     
     void end_of_interrupt(u32 idx){

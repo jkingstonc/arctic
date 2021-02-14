@@ -1,5 +1,5 @@
 #include "Timer.h"
-#include "../arch/i386/cpu/Interrupt.h"
+#include "../arch/i386/cpu/I386Interrupt.h"
 #include "../arch/i386/cpu/IDT.h"
 #include "../io/KPrintf.h"
 #include "../io/Port.h"

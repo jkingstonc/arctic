@@ -1,5 +1,5 @@
-#include "Paging.h"
-#include "../cpu/Interrupt.h"
+#include "I386Paging.h"
+#include "../cpu/I386Interrupt.h"
 #include "../../../utils/Mem.h"
 #include "../../../io/KPrintf.h"
 #include "../../../memory/KMalloc.h"

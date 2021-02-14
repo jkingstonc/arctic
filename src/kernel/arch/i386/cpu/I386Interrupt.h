@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Types.h"
-#include "CPU.h"
+#include "I386CPU.h"
 
 namespace CPU{
     extern void (*interrupts[256])(Registers);
