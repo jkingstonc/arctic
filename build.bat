@@ -48,7 +48,6 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/Kernel.o ^
     %BUILD%/KPrintf.o ^
     %BUILD%/Shell.o ^
-    %BUILD%/Memory.o ^
     %BUILD%/Port.o ^
     %BUILD%/Interrupt.o ^
     %BUILD%/IDT.o ^
@@ -68,7 +67,6 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/GDTasm.o ^
     %BUILD%/IDTasm.o ^
     %BUILD%/CPUasm.o ^
-    %BUILD%/Memoryasm.o ^
     %BUILD%/Pagingasm.o ^
     %BUILD%/VBEGraphics.o ^
     %BUILD%/Math.o ^
