@@ -2,8 +2,17 @@
 
 #include "../../../Types.h"
 #include "../cpu/I386CPU.h"
+#include "../cpu/I386Interrupt.h"
+#include "../../../cpu/InterruptService.h"
+#include "../../../io/Debug.h"
 
 namespace Memory{
+
+    class TrapInterruptServicePageFault : public CPU::InterruptService{
+    public:
+        virtual void interrupt_handler(CPU::Registers registers) override {IO::dbg() << "TRAP = page fault\n"; CPU::end_of_interrupt(0xE);};
+        virtual u32 interrupt_idx() override {return 0xE;};
+    };
 
     // // each page frame (not page entry!) is 4Mib (4194304 bytes)
     struct Page{

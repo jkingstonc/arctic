@@ -7,10 +7,23 @@
 
 // universal interrupt wrapper function
 extern "C" void interrupt_handler(CPU::Registers registers){
-    // call the required interrupt
-    CPU::interrupts[registers.int_no](registers);
+    
+    
+    // // call the required interrupt
+    // CPU::interrupts[registers.int_no](registers);
+    // call the required interrupt handler
+    CPU::interrupts_v2[registers.int_no]->interrupt_handler(registers);
+    
     return;
 }
+
+// universal interrupt wrapper function
+extern "C" void interrupt_handler_v2(CPU::Registers registers){
+    // call the required interrupt handler
+    CPU::interrupts_v2[registers.int_no]->interrupt_handler(registers);
+    return;
+}
+
 
 extern "C" void interrupt_isr_0();
 extern "C" void interrupt_isr_1();
@@ -48,6 +61,40 @@ extern "C" void interrupt_isr_32();
 extern "C" void interrupt_isr_33();
 extern "C" void interrupt_isr_34();
 extern "C" void interrupt_isr_35();
+
+
+
+// setup the trap interrupt services
+CPU::TrapInterruptService0 trap_interrupt_service_0;
+CPU::TrapInterruptService1 trap_interrupt_service_1;
+CPU::TrapInterruptService2 trap_interrupt_service_2;
+CPU::TrapInterruptService3 trap_interrupt_service_3;
+CPU::TrapInterruptService4 trap_interrupt_service_4;
+CPU::TrapInterruptService5 trap_interrupt_service_5;
+CPU::TrapInterruptService6 trap_interrupt_service_6;
+CPU::TrapInterruptService7 trap_interrupt_service_7;
+CPU::TrapInterruptService8 trap_interrupt_service_8;
+CPU::TrapInterruptService9 trap_interrupt_service_9;
+CPU::TrapInterruptService10 trap_interrupt_service_10;
+CPU::TrapInterruptService11 trap_interrupt_service_11;
+CPU::TrapInterruptService12 trap_interrupt_service_12;
+CPU::TrapInterruptService13 trap_interrupt_service_13;
+CPU::TrapInterruptService14 trap_interrupt_service_14;
+CPU::TrapInterruptService15 trap_interrupt_service_15;
+CPU::TrapInterruptService16 trap_interrupt_service_16;
+CPU::TrapInterruptService17 trap_interrupt_service_17;
+CPU::TrapInterruptService18 trap_interrupt_service_18;
+CPU::TrapInterruptService19 trap_interrupt_service_19;
+CPU::TrapInterruptService20 trap_interrupt_service_20;
+CPU::TrapInterruptService21 trap_interrupt_service_21;
+CPU::TrapInterruptService22 trap_interrupt_service_22;
+CPU::TrapInterruptService23 trap_interrupt_service_23;
+CPU::TrapInterruptService24 trap_interrupt_service_24;
+CPU::TrapInterruptService25 trap_interrupt_service_25;
+CPU::TrapInterruptService26 trap_interrupt_service_26;
+CPU::TrapInterruptService27 trap_interrupt_service_27;
+CPU::TrapInterruptService28 trap_interrupt_service_28;
+CPU::TrapInterruptService29 trap_interrupt_service_29;
 
 namespace CPU{
 
@@ -131,39 +178,40 @@ namespace CPU{
         IO::kwarn(exception);
     }
 
-    void setup_interrupts(){
-        register_interrupt(0, trap_handler, 0x08, 0x8E);
-        register_interrupt(1, trap_handler, 0x08, 0x8E);
-        register_interrupt(2, trap_handler, 0x08, 0x8E);
-        register_interrupt(3, trap_handler, 0x08, 0x8E);
-        register_interrupt(4, trap_handler, 0x08, 0x8E);
-        register_interrupt(5, trap_handler, 0x08, 0x8E);
-        register_interrupt(6, trap_handler, 0x08, 0x8E);
-        register_interrupt(7, trap_handler, 0x08, 0x8E);
-        register_interrupt(8, trap_handler, 0x08, 0x8E);
-        register_interrupt(9, trap_handler, 0x08, 0x8E);
-        register_interrupt(10, trap_handler, 0x08, 0x8E);
-        register_interrupt(11, trap_handler, 0x08, 0x8E);
-        register_interrupt(12, trap_handler, 0x08, 0x8E);
-        register_interrupt(13, trap_handler, 0x08, 0x8E);
-        register_interrupt(14, trap_handler, 0x08, 0x8E);
-        register_interrupt(15, trap_handler, 0x08, 0x8E);
-        register_interrupt(16, trap_handler, 0x08, 0x8E);
-        register_interrupt(17, trap_handler, 0x08, 0x8E);
-        register_interrupt(18, trap_handler, 0x08, 0x8E);
-        register_interrupt(19, trap_handler, 0x08, 0x8E);
-    }
-
-    void register_interrupt(u32 idx, void(interrupt)(Registers), u16 selector, u8 flags){
-        interrupts[idx]=interrupt;
-        CPU::add_entry(idx, (u32)interrupts_isrs[idx], selector, flags);
-    }
-
     void register_interrupt(InterruptService* interrupt_service){
-        interrupts_v2[interrupt_service->interrupt_idx()] = interrupt_service;
-        IO::dbg() << "register_interrupt = " << interrupt_service->interrupt_idx() << "\n";
+        u32 idx = interrupt_service->interrupt_idx();
+        u32 interrupt_flags = interrupt_service->interrupt_flags();
+        u16 selector = (u16) (interrupt_flags >> 8);
+        u8 flags = (u8)(interrupt_flags & 0xFF);
+        CPU::add_entry(idx, (u32)interrupts_isrs[idx], 0x8, 0x8e);
+        interrupts_v2[idx] = interrupt_service;
+        IO::dbg() << "registering interrupt = " << idx << "\n";
     }
-    
+
+    void setup_interrupts(){
+        register_interrupt(&trap_interrupt_service_0);
+        register_interrupt(&trap_interrupt_service_1);
+        register_interrupt(&trap_interrupt_service_2);
+        register_interrupt(&trap_interrupt_service_3);
+        register_interrupt(&trap_interrupt_service_4);
+        register_interrupt(&trap_interrupt_service_5);
+        register_interrupt(&trap_interrupt_service_6);
+        register_interrupt(&trap_interrupt_service_7);
+        register_interrupt(&trap_interrupt_service_8);
+        register_interrupt(&trap_interrupt_service_9);
+        register_interrupt(&trap_interrupt_service_10);
+        register_interrupt(&trap_interrupt_service_11);
+        register_interrupt(&trap_interrupt_service_12);
+        register_interrupt(&trap_interrupt_service_13);
+        register_interrupt(&trap_interrupt_service_14);
+        register_interrupt(&trap_interrupt_service_15);
+        register_interrupt(&trap_interrupt_service_16);
+        register_interrupt(&trap_interrupt_service_17);
+        register_interrupt(&trap_interrupt_service_18);
+        register_interrupt(&trap_interrupt_service_19);
+        register_interrupt(&trap_interrupt_service_20);
+    }
+
     void end_of_interrupt(u32 idx){
         if(idx>=8){
             IO::outb(0xA0, 0x20);

@@ -8,6 +8,6 @@ namespace CPU{
     public:
         virtual void interrupt_handler(CPU::Registers registers){}
         virtual u32 interrupt_idx(){return -1;}
-        virtual u32 interrupt_flags(){return -1;}
+        virtual u32 interrupt_flags(){return (0x08 << 8) | 0x8E;}
     };
 }

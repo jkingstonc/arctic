@@ -1,4 +1,5 @@
 #include "Keyboard.h"
+#include "../Kernel.h"
 #include "../io/Port.h"
 #include "../io/KPrintf.h"
 #include "../arch/i386/cpu/I386IDT.h"
@@ -24,7 +25,7 @@ namespace Device{
         /* Lowest bit of status will be set if buffer is not empty */
         if (status & 0x01) {
             if(scancode > 0){
-                IO::kwarn("keyboard!\n");
+                IO::dbg() << "keyboard press!\n";
                 //IO::kprint_c(Dev::Keyboard::keyboard_map[scancode]);
             }
         }
@@ -91,11 +92,11 @@ namespace Dev::Keyboard{
     };
 
     void init_keyboard(){
-        // to enable only the keyboard:
-        // IO::outb(0x21, 0xFD);
-        IO::kinfo("initialised keyboard\n");
-        // start at 0x20 as previous traps were remapped to start at 0-19
-        CPU::register_interrupt(0x21, keyboard_handler, 0x08, 0x8E);
+        // // to enable only the keyboard:
+        // // IO::outb(0x21, 0xFD);
+        // IO::kinfo("initialised keyboard\n");
+        // // start at 0x20 as previous traps were remapped to start at 0-19
+        // CPU::register_interrupt(0x21, keyboard_handler, 0x08, 0x8E);
     }
 
     

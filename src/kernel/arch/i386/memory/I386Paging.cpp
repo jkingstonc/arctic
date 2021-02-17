@@ -1,5 +1,6 @@
 #include "I386Paging.h"
 #include "../cpu/I386Interrupt.h"
+#include "../../../cpu/Interrupt.h"
 #include "../../../utils/Mem.h"
 #include "../../../io/KPrintf.h"
 #include "../../../memory/KMalloc.h"
@@ -11,6 +12,8 @@ extern "C" void enable_paging(u32 page_directory);
 
 namespace Memory{
     
+    TrapInterruptServicePageFault trap_interrupt_service_page_fault;
+
     // bitmap of available frames
     // each bit is a used frame so we need to implement handling for each bit
     u32* frame_bitmap;
@@ -35,7 +38,8 @@ namespace Memory{
 
     void setup_paging(){
 
-        CPU::register_interrupt(14, page_fault_handler, 0x08, 0x8E);
+        //CPU::register_interrupt(14, page_fault_handler, 0x08, 0x8E);
+        CPU::register_interrupt(&trap_interrupt_service_page_fault);
         // first setup the available frames bitmap
         // for now assume we have only 4GB of memory
         num_frames = 0xEE6B2800/0x1000;
