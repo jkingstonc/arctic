@@ -2,9 +2,12 @@
 
 #include "../../../Types.h"
 #include "I386CPU.h"
+#include "../../../cpu/InterruptService.h"
 
 namespace CPU{
     extern void (*interrupts[256])(Registers);
+    extern InterruptService* interrupts_v2[256];
+    
     extern const char* exception_types[31];
     extern void setup_interrupts();
     extern void register_interrupt(u32 idx, void(interrupt)(Registers), u16 selector, u8 flags);

@@ -1,8 +1,24 @@
 #include "Timer.h"
 #include "../arch/i386/cpu/I386Interrupt.h"
-#include "../arch/i386/cpu/IDT.h"
+#include "../arch/i386/cpu/I386IDT.h"
 #include "../io/KPrintf.h"
 #include "../io/Port.h"
+
+namespace Device{
+    void Timer::interrupt_handler(CPU::Registers registers){
+        m_tick++;
+        CPU::end_of_interrupt(0x20);
+    }
+
+    u32 Timer::interrupt_flags(){
+        return (0x08 << 8) | 0x8E;
+    }
+    
+    u32 Timer::interrupt_idx(){
+        return 0x20;
+    }
+}
+
 
 namespace Dev::Timer{
 

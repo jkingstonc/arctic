@@ -2,13 +2,11 @@
 
 #include "../Types.h"
 
-namespace Utils {
-
-    template <typename T>
-    class Bitmap{
-        T*data;
-        Bitmap(size size);
-        ~Bitmap();
-    };
-
-}
+// template <typename T>
+// class Bitmap{
+// public:
+//     Bitmap(size size);
+//     ~Bitmap();
+// private:
+//     T*data;
+// };

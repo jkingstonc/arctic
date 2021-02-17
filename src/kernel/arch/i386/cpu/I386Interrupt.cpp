@@ -2,8 +2,8 @@
 #include "../../../io/KPrintf.h"
 #include "../../../io/Port.h"
 #include "../../../dev/Keyboard.h"
-#include "IDT.h"
-#include "../../../cpu/InterruptService.h"
+#include "../../../io/Debug.h"
+#include "I386IDT.h"
 
 // universal interrupt wrapper function
 extern "C" void interrupt_handler(CPU::Registers registers){
@@ -52,6 +52,7 @@ extern "C" void interrupt_isr_35();
 namespace CPU{
 
     void (*interrupts[256])(Registers);
+    InterruptService* interrupts_v2[256];
 
     void (*interrupts_isrs[])() = {
         interrupt_isr_0,
@@ -159,7 +160,8 @@ namespace CPU{
     }
 
     void register_interrupt(InterruptService* interrupt_service){
-        dbg() << "register_interrupt = " << interrupt_service->interrupt_idx() << "\n";
+        interrupts_v2[interrupt_service->interrupt_idx()] = interrupt_service;
+        IO::dbg() << "register_interrupt = " << interrupt_service->interrupt_idx() << "\n";
     }
     
     void end_of_interrupt(u32 idx){

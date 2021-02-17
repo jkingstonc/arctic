@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Kernel.h"
+#include "../arch/i386/cpu/I386CPU.h"
 
 namespace CPU{
     class InterruptService {

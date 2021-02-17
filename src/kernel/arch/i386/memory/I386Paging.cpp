@@ -5,6 +5,7 @@
 #include "../../../memory/KMalloc.h"
 #include "../../../Panic.h"
 #include "../../../Kernel.h"
+#include "../../../io/Debug.h"
 
 extern "C" void enable_paging(u32 page_directory);
 
@@ -61,7 +62,7 @@ namespace Memory{
         cr4_value |= 0x00000010;
         asm volatile("mov %0, %%cr4":: "r"(cr4_value));
 
-        dbg() << "setup i386 paging\n";
+        IO::dbg() << "setup i386 paging\n";
     }
 
     void set_active_page_directory(PageDirectory* page_directory){

@@ -8,20 +8,21 @@ set CCOMPILER=wsl $WSLENV/x86_64-elf-gcc
 set LINKER=wsl $WSLENV/x86_64-elf-ld
 set CFLAGS=-m32 -ffreestanding -nostdinc -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions
 
-nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/GDT.asm -o %BUILD%/GDTasm.o
-nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/IDT.asm -o %BUILD%/IDTasm.o
-nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/CPU.asm -o %BUILD%/CPUasm.o
-nasm -f elf32 %SOURCES%/kernel/arch/i386/memory/Paging.asm -o %BUILD%/Pagingasm.o
-nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
+nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/I386GDTAsm.asm -o %BUILD%/I386GDTAsm.o
+nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/I386IDTAsm.asm -o %BUILD%/I386IDTAsm.o
+nasm -f elf32 %SOURCES%/kernel/arch/i386/cpu/I386CPUAsm.asm -o %BUILD%/I386CPUAsm.o
+nasm -f elf32 %SOURCES%/kernel/arch/i386/memory/I386PagingAsm.asm -o %BUILD%/I386PagingAsm.o
+nasm -f elf32 %SOURCES%/kernel/KernelAsm.asm -o %BUILD%/KernelAsm.o
 
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/Kernel.cpp -o %BUILD%/Kernel.o
-%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/IDT.cpp -o %BUILD%/IDT.o
-%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/GDT.cpp -o %BUILD%/GDT.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/I386IDT.cpp -o %BUILD%/I386IDT.o
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/I386GDT.cpp -o %BUILD%/I386GDT.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/I386CPU.cpp -o %BUILD%/I386CPU.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/cpu/i386Interrupt.cpp -o %BUILD%/I386Interrupt.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/arch/i386/memory/I386Paging.cpp -o %BUILD%/I386Paging.o
 
 
+%CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/Debug.cpp -o %BUILD%/Debug.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/KPrintf.cpp -o %BUILD%/KPrintf.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/shell/Shell.cpp -o %BUILD%/Shell.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/io/Port.cpp -o %BUILD%/Port.o
@@ -44,14 +45,15 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
 %CCOMPILER% %CFLAGS% -c %SOURCES%/kernel/utils/Mem.cpp -o %BUILD%/Mem.o
 
 %LINKER% -m elf_i386 -T %SOURCES%/link.ld -o %BUILD%/Arctic-0 ^
-    %BUILD%/kasm.o ^
+    %BUILD%/KernelAsm.o ^
     %BUILD%/Kernel.o ^
+    %BUILD%/Debug.o ^
     %BUILD%/KPrintf.o ^
     %BUILD%/Shell.o ^
     %BUILD%/Port.o ^
     %BUILD%/I386Interrupt.o ^
-    %BUILD%/IDT.o ^
-    %BUILD%/GDT.o ^
+    %BUILD%/I386IDT.o ^
+    %BUILD%/I386GDT.o ^
     %BUILD%/I386CPU.o ^
     %BUILD%/I386Paging.o ^
     %BUILD%/Keyboard.o ^
@@ -64,10 +66,10 @@ nasm -f elf32 %SOURCES%/kernel/kernel.asm -o %BUILD%/kasm.o
     %BUILD%/VGAGraphics.o ^
     %BUILD%/Panic.o ^
     %BUILD%/Video.o ^
-    %BUILD%/GDTasm.o ^
-    %BUILD%/IDTasm.o ^
-    %BUILD%/CPUasm.o ^
-    %BUILD%/Pagingasm.o ^
+    %BUILD%/I386GDTAsm.o ^
+    %BUILD%/I386IDTAsm.o ^
+    %BUILD%/I386CPUAsm.o ^
+    %BUILD%/I386PagingAsm.o ^
     %BUILD%/VBEGraphics.o ^
     %BUILD%/Math.o ^
     %BUILD%/String.o ^

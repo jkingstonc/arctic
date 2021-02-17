@@ -1,7 +1,7 @@
 #include "Keyboard.h"
 #include "../io/Port.h"
 #include "../io/KPrintf.h"
-#include "../arch/i386/cpu/IDT.h"
+#include "../arch/i386/cpu/I386IDT.h"
 #include "../arch/i386/cpu/I386Interrupt.h"
 
 
