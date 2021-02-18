@@ -9,10 +9,13 @@
 extern "C" void enter_protected();
 
 namespace CPU{
-    void setup_cpu(){
+
+    void setup_cpu_stage1(){
         setup_gdt();
-        setup_idt();
         setup_interrupts();
+    }
+    void setup_cpu_stage2(){
+        setup_idt();
         enter_protected();
         IO::dbg() << "setup i386 cpu\n";
     }

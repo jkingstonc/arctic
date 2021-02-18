@@ -4,6 +4,7 @@ ASMFLAGS=-f elf32
 ASFLAGS=-felf
 SUBDIRS:= $(wildcard */)
 SOURCES := $(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp */*/*/*/*.cpp */*/*/*/*/*.cpp)
+HEADERS := -Isrc/
 ASMSOURCES := $(wildcard *.asm */*.asm */*/*.asm */*/*/*.asm */*/*/*/*.asm */*/*/*/*/*.asm)
 OUTPUT=./build
 BINARY=build/Arctic-0
@@ -27,7 +28,7 @@ all: $(OBJECTS) $(ASMOBJECTS) $(BINARY)
 	echo $(OS)
 
 %.o : %.cpp
-	$(CC) $(CXXFLAGS) -c $< -o $@ 
+	$(CC) $(CXXFLAGS) $(HEADERS) -c $< -o $@ 
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@ 

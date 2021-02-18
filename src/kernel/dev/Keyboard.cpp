@@ -13,7 +13,7 @@ namespace Device{
     }
     
     void Keyboard::write(u8 c){
-
+        ASSERT_REACHED("can't write to keyboard device...?\n");
     }
 
     void Keyboard::interrupt_handler(CPU::Registers registers) {

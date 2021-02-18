@@ -1,7 +1,7 @@
 #include "I386Paging.h"
 #include "../cpu/I386Interrupt.h"
 #include "../../../cpu/Interrupt.h"
-#include "../../../utils/Mem.h"
+#include "../../../../util/Mem.h"
 #include "../../../io/KPrintf.h"
 #include "../../../memory/KMalloc.h"
 #include "../../../Panic.h"

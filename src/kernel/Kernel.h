@@ -15,4 +15,5 @@ typedef u32 size;
 
 extern void assert(u1 expression, u32 line, const char* file, const char* msg);
 #define ASSERT(expression, msg) assert(expression, __LINE__, __FILE__, msg)
+#define ASSERT_REACHED(msg) assert(false, __LINE__, __FILE__, msg)
 #define VERSION "0.0.1_a"

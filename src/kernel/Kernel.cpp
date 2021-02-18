@@ -1,4 +1,4 @@
-#include "Kernel.h"
+#include <kernel/Kernel.h>
 #include "cpu/CPU.h"
 #include "io/KPrintf.h"
 #include "shell/Shell.h"
@@ -10,14 +10,14 @@
 #include "driver/PS2Keyboard.h"
 #include "driver/VGAGraphics.h"
 #include "driver/VBEGraphics.h"
-#include "utils/Optional.h"
-#include "utils/Math.h"
+#include "util/Optional.h"
+#include "util/Math.h"
 #include "Multiboot.h"
 #include "Panic.h"
-#include "utils/string.h"
+#include <util/String.h>
 #include "io/Serial.h"
-#include "utils/SStream.h"
-#include "utils/Numeric.h"
+#include <util/SStream.h>
+#include <util/Numeric.h>
 
 #include "io/Debug.h"
 #include "cpu/InterruptService.h"
@@ -37,11 +37,15 @@ int main(multiboot_info* multiboot_info, u32 magic){
     Driver::VGAGraphics::vga_driver.clear(0);
     Driver::VGAGraphics::vga_driver.init();
     
-    CPU::setup_cpu();
+    CPU::setup_cpu_stage1();
     auto kb = Device::Keyboard();
     auto tm = Device::Timer();
     register_interrupt(&kb);
     register_interrupt(&tm);
+
+
+    CPU::setup_cpu_stage2();
+
     //Memory::setup_paging();
     IO::setup_serial();
 

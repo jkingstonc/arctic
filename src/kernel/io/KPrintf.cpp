@@ -1,6 +1,6 @@
 #include "KPrintf.h"
-#include "../utils/Math.h"
-#include "../Types.h"
+#include "../../util/Math.h"
+#include <kernel/Kernel.h>
 #include "../driver/VGAGraphics.h"
 #include "Serial.h"
 
