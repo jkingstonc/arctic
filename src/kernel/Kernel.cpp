@@ -22,6 +22,8 @@
 #include "io/Debug.h"
 #include "cpu/InterruptService.h"
 #include "cpu/Interrupt.h"
+#include <kernel/fs/vfs.h>
+#include <kernel/fs/Initrd.h>
 
 
 void assert(u1 expression, u32 line, const char* file, const char* msg){
@@ -49,9 +51,6 @@ int main(multiboot_info* multiboot_info, u32 magic){
     //Memory::setup_paging();
     IO::setup_serial();
 
-
-
-
     // the issue is that that the vbe memory map is not mapped into the virtual address space
     Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
     {
@@ -69,6 +68,19 @@ int main(multiboot_info* multiboot_info, u32 magic){
             }
         }
     }
+
+    struct {
+        FS::InitRDHeader header;
+        FS::InitRDEntry entry1;
+    } rd;
+
+    rd.header.magic = 0x123;
+    rd.header.n_files = 1;
+    rd.entry1.filename="hello world!";
+
+    FS::setup_initrd((u32)&rd);
+
+
 
     IO::dbg() << "kernel booted version " << VERSION << "\n";
 

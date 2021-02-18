@@ -14,6 +14,13 @@ namespace IO{
         m_port = port;
     }
 
+    DbgStream& operator<<(DbgStream& ds, String s) {
+        auto c_str = s.cstr();
+        for(u32 i=0; c_str[i];i++)
+            IO::write_serial(ds.m_port, c_str[i]);
+        return ds;
+    } 
+
     DbgStream& operator<<(DbgStream& ds, const char* s) {
         for(u32 i=0;s[i];i++)
             IO::write_serial(ds.m_port, s[i]);
