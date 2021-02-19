@@ -28,7 +28,7 @@ namespace FS{
     extern void setup_initrd(u32 address);
 
     // this is the initial ram disk virtual filesystem
-    extern VFS initrd; 
+    extern VFS initrd_vfs; 
     extern InitRDHeader* initrd_header;
     extern InitRDEntry** initrd_files;
 }

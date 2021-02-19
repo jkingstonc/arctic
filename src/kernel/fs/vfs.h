@@ -37,7 +37,7 @@ namespace FS{
         u32 inode;            // points to filesystem specific inode identifier
         u32 size;
         u32 implementation;   // implementation specific number
-        VFSNode* link;        // used by symlinks and pointpoints
+        VFSNode* children;    // store directory entries, or if this is a symlink then the symlink
 
         // POSIX compliant callbacks
         read_callback read = 0;
@@ -52,6 +52,7 @@ namespace FS{
         VFS();
         ~VFS();
         VFSNode* root();
+        VFSNode* get_file(String path); // given a path (/dev/null) return the VFSNode*
     private:
         VFSNode m_root;
     };

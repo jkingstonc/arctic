@@ -9,7 +9,6 @@ namespace FS{
         return &m_root;
     }
 
-
     u32 read_vfs_file(VFSNode* node, u32 offset, u32 size, u8* buffer){
         IO::dbg() << "read file = " << node->filename << "\n";
         if(node->read){
@@ -38,5 +37,18 @@ namespace FS{
         if(node->close){
             node->close(node);
         }
+    }
+
+
+    VFSNode* VFS::get_file(String path){
+        
+        // u32 depth = 0;
+        // VFSNode* current = &m_root;
+        // String path_parts[] = path.split('/');
+        // while(1){
+
+        //     depth++;
+        // }
+        return 0;
     }
 }

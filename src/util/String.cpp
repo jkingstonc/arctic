@@ -50,6 +50,18 @@ void String::append(const char* s){
     clear();
 }
 
+void String::append(char c){
+
+}
+
+char String::at(unsigned int pos){
+    return m_cstr[pos];
+}
+
+char String::operator[](unsigned int pos){
+    return m_cstr[pos];
+}
+
 int String::size(){
     return m_allocated;
 }
@@ -64,6 +76,62 @@ const char* String::cstr(){
     return m_cstr;
 }
 
+String String::substr(unsigned int pos, unsigned int len=0){
+    String s;
+    if (len==0){
+        len = size()-pos;
+    }
+    for(int i=pos;i<len;i++){
+        s.append(m_cstr[i]);
+    }
+    return s;
+}
+
+int String::find(String& s, unsigned int pos){
+    unsigned int str_len = strlen(m_cstr);
+    for(int i=pos;i<size();i++){
+        if(m_cstr[i]==s.at(0)){
+            // check if the rest of the string matches
+            bool found = true;
+            for(int j=1;j<s.size();j++){
+                if(i+j >= str_len || m_cstr[i+j]!=s.at(j)){
+                    found=false;
+                    break;
+                }
+            }
+            if(found){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+int String::find(const char* s, unsigned int pos){
+    unsigned int str_len = strlen(m_cstr);
+    for(int i=pos;i<size();i++){
+        if(m_cstr[i]==s[0]){
+            // check if the rest of the string matches
+            bool found = true;
+            for(int j=1;j<strlen(s);j++){
+                if(i+j >= str_len || m_cstr[i+j]!=s[j]){
+                    found=false;
+                    break;
+                }
+            }
+            if(found){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+int String::find(char c, unsigned int pos){
+    for(int i=pos;i<size();i++){
+        if(m_cstr[i]==c)
+            return i;
+    }
+    return 0;
+}
 
 u32 strlen(const char* s){
     u32 counter=0;

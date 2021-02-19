@@ -9,8 +9,6 @@ namespace FS{
 
     extern void setup_initrd(u32 address){
 
-        initrd.root()->flags = VFS_DIR;
-
         // get the header
         initrd_header = (InitRDHeader*)address;
         

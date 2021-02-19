@@ -1,5 +1,6 @@
 #include "KMalloc.h"
 #include "../io/KPrintf.h"
+#include <kernel/io/Debug.h>
 
 // defined in the linker script, this is the address after the entire kernel
 // extern u32 end_of_kernel;
@@ -7,21 +8,22 @@ extern u32 end_of_kernel;
 
 namespace Memory{
 
+    Heap heap;
+
     u32 next_free_address = (u32)&end_of_kernel;
     u32 end_of_kernel_address = (u32)&end_of_kernel;
 
     // not aligned, and don't return the physical address
     u32 kmalloc(size size){
         // !@TODO align properly, e.g. if size was 5 bytes, then allocate 8 bytes to word align
-
         u32 addr = next_free_address;
         next_free_address+=size;
-        IO::kinfo("kmalloc, size=");
-        IO::kprint_int(size);
-        IO::kprint_str(", addr= ");
-        IO::kprint_int(addr);
-        IO::kprint_c('\n');
+        IO::dbg() << "kmalloc size="<<size<<" addr="<<addr<<"\n";
         return addr;
+    }
+    
+    u32 krealloc(u32 data, size size){
+        return 0; // @TODO implement me
     }
 
     u32 kmalloc_special(size size, u1 align, u1 physical, u32* physical_addr){
