@@ -58,8 +58,15 @@ int main(multiboot_info* multiboot_info, u32 magic){
 
     Memory::Heap* heap = (Memory::Heap*)Memory::kmalloc(sizeof(Memory::Heap));
     // for some reason addresses aboe this dont work???
-    heap->setup(0xc00000, 0x1000);
-    
+    heap->setup(0xc00030, 0x10000);
+    u32 addr = heap->alloc(100, true);
+    IO::dbg()<< "heap alloc="<<addr<<"\n";
+    addr = heap->alloc(100, true);
+    IO::dbg()<< "heap alloc="<<addr<<"\n";
+    // heap->free(addr);
+
+    heap->debug();
+
 
     // // the issue is that that the vbe memory map is not mapped into the virtual address space
     // Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);

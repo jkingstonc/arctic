@@ -6,6 +6,7 @@
 namespace IO{
     
     DbgStream dbg_stream;
+    ErrStream err_stream;
 
     DbgStream::DbgStream(){
         m_port = COM1;
@@ -45,5 +46,39 @@ namespace IO{
 
     DbgStream& dbg(){
         return dbg_stream;
+    }
+
+
+
+
+    ErrStream::ErrStream(){
+        m_port = COM1;
+    }
+    ErrStream::ErrStream(u16 port){
+        m_port = port;
+    }
+
+    ErrStream& operator<<(ErrStream& ds, String s) {
+        dbg() << ds.ansi_red << s << ds.ansi_reset;
+        return ds;
+    } 
+
+    ErrStream& operator<<(ErrStream& ds, const char* s) {
+        dbg() << ds.ansi_red << s << ds.ansi_reset;
+        return ds;
+    } 
+
+    ErrStream& operator<<(ErrStream& ds, s32 s){
+        dbg() << ds.ansi_red << s << ds.ansi_reset;
+        return ds;
+    }
+
+    ErrStream& operator<<(ErrStream& ds, u32 s){
+        dbg() << ds.ansi_red << s << ds.ansi_reset;
+        return ds;
+    }
+
+    ErrStream& err(){
+        return err_stream;
     }
 }

@@ -10,7 +10,10 @@ namespace Memory{
 
     class TrapInterruptServicePageFault : public CPU::InterruptService{
     public:
-        virtual void interrupt_handler(CPU::Registers registers) override {IO::dbg() << "TRAP = page fault\n"; CPU::end_of_interrupt(0xE);};
+        virtual void interrupt_handler(CPU::Registers registers) override {
+            IO::dbg() << "TRAP = page fault\n";
+            CPU::end_of_interrupt(0xE);
+        };
         virtual u32 interrupt_idx() override {return 0xE;};
     };
 

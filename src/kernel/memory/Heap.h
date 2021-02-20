@@ -28,8 +28,9 @@ namespace Memory{
         Heap();
         ~Heap();
         void setup(u32 start_addr, u32 size);
-        u32 alloc(u32 size, u1 page_align);
+        u32 alloc(u32 size, u1 page_align=false);
         void free(u32 addr);
+        void debug();
     private:
         s32 find_smallest_hole(u32 size, u1 page_align);
         u32 m_start_addr;     // start of the heap
