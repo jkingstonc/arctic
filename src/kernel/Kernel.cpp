@@ -25,6 +25,8 @@
 #include <kernel/fs/vfs.h>
 #include <kernel/fs/Initrd.h>
 #include <util/OrderedVector.h>
+#include <kernel/memory/Heap.h>
+#include <kernel/memory/KMalloc.h>
 
 
 void assert(u1 expression, u32 line, const char* file, const char* msg){
@@ -49,8 +51,15 @@ int main(multiboot_info* multiboot_info, u32 magic){
 
     CPU::setup_cpu_stage2();
 
-    Memory::setup_paging();
+
+
+    //Memory::setup_paging();
     IO::setup_serial();
+
+    Memory::Heap* heap = (Memory::Heap*)Memory::kmalloc(sizeof(Memory::Heap));
+    // for some reason addresses aboe this dont work???
+    heap->setup(0xc00000, 0x1000);
+    
 
     // // the issue is that that the vbe memory map is not mapped into the virtual address space
     // Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
@@ -70,16 +79,16 @@ int main(multiboot_info* multiboot_info, u32 magic){
     //     }
     // }
 
-    struct {
-        FS::InitRDHeader header;
-        FS::InitRDEntry entry1;
-    } rd;
+    // struct {
+    //     FS::InitRDHeader header;
+    //     FS::InitRDEntry entry1;
+    // } rd;
 
-    rd.header.magic = 0x123;
-    rd.header.n_files = 1;
-    rd.entry1.filename="hello world!";
+    // rd.header.magic = 0x123;
+    // rd.header.n_files = 1;
+    // rd.entry1.filename="hello world!";
 
-    FS::setup_initrd((u32)&rd);
+    // FS::setup_initrd((u32)&rd);
 
     IO::dbg() << "kernel booted version " << VERSION << "\n";
 

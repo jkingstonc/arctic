@@ -185,7 +185,9 @@ namespace CPU{
         u8 flags = (u8)(interrupt_flags & 0xFF);
         CPU::add_entry(idx, (u32)interrupts_isrs[idx], 0x8, 0x8e);
         interrupts_v2[idx] = interrupt_service;
+        #ifdef DEBUG_INTERRUPTS
         IO::dbg() << "registering interrupt = " << idx << "\n";
+        #endif
     }
 
     void setup_interrupts(){

@@ -16,6 +16,10 @@
 // }
 
 
+typedef bool (*order_comparitor)(void* first, void* second);
+
+extern bool default_order_comparitor(void* first, void* second);
+
 
 template<typename T>
 class OrderedVector{
@@ -31,21 +35,31 @@ public:
         }
         free(m_data);
     }
-    void put(T data){
 
+    int find(T value){
+        for(int i=0;i<m_size;i++){
+            if(m_data[i]==value){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    void put(T data){
         if(m_size+1 > m_allocated){
             m_allocated+=ORDERED_VECTOR_INIT_SIZE;
             m_data=(T*)realloc(m_data, m_allocated*sizeof(T));
         }
-
         // find the index where we can insert into
         unsigned int idx=0;
-        while(idx<m_size && m_data[idx]<data){
-            IO::dbg() << "comparing "<<data<< " with "<<m_data[idx]<<"... result "<< (m_data[idx]>data) <<"\n";
+        // this uses operator overloading
+        // while(idx<m_size && m_data[idx]<data){
+        //     idx++;
+        // }
+        // this uses a comparison function
+        while(idx<m_size && m_comparitor((void*)m_data[idx], (void*)data)){
             idx++;
         }
-        
-        IO::dbg() << "inserting into index ="<<idx<<"m_size =" << m_size <<"\n";
         // found the idx
         if(idx==m_size){
             m_data[idx]=data;
@@ -83,9 +97,12 @@ public:
         }
         m_size=0;
     }
+    void set_comparitor(order_comparitor order_comparitor){
+        m_comparitor = order_comparitor;
+    }
 private:
     T* m_data;
     unsigned int m_size = 0; // the actual space used
     unsigned int m_allocated = 0; // the space we have allocated
-    //order_comparison m_comparitor;
+    order_comparitor m_comparitor = default_order_comparitor;
 };

@@ -1,0 +1,2 @@
+- sorting of HeapEntryBorders in the allocation map
+  - as we are storing them as u32's, the allocation map doesn't sort them as heap entries
