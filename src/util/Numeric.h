@@ -2,5 +2,6 @@
 
 #include "../kernel/Kernel.h"
 
-extern void itoa(s32 s, char* buffer);
-extern void itoa(u32 s, char* buffer);
+extern void itoa(int s, char* buffer);
+extern void itoa(unsigned int s, char* buffer);
+extern void ftoa(float s, char* buffer);

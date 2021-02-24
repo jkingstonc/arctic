@@ -1,17 +1,30 @@
-#include "Math.h"
+#include <util/Math.h>
 
-namespace Utils::Math{
-    f32 pow(f32 value, u32 exponent){
-        f32 result = value;
-        for(u32 i=0;i<exponent;i++)
-            result*=value;
-        return result;
-    }
+float pow(float value, int exponent){
+    float result = value;
+    for(int i=0;i<exponent;i++)
+        result*=value;
+    return result;
+}
 
-    s32 pow(s32 value, u32 exponent){
-        s32 result = value;
-        for(u32 i=0;i<exponent;i++)
-            result*=value;
-        return result;
-    }
+int pow(int value, int exponent){
+    int result = value;
+    for(int i=0;i<exponent;i++)
+        result*=value;
+    return result;
+}
+
+/*
+https://www.geeksforgeeks.org/square-root-of-a-perfect-square/
+Babylonian method for quick squareroots
+*/
+float sqrt(float value){
+    float x = value; 
+    float y = 1; 
+    float e = 0.000001; // accuracy level
+    while (x - y > e) { 
+        x = (x + y) / 2; 
+        y = value / x; 
+    } 
+    return x; 
 }

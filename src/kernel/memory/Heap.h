@@ -29,6 +29,7 @@ namespace Memory{
         ~Heap();
         void setup(u32 start_addr, u32 size);
         u32 alloc(u32 size, u1 page_align=false);
+        u32 realloc(u32 ptr, u1 page_align=false);
         void free(u32 addr);
         void debug();
     private:

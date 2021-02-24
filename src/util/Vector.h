@@ -19,6 +19,11 @@ public:
         free(m_data);
     }
 
+
+    T operator[](unsigned int index){
+        return m_data[index];
+    }
+    
     T at(unsigned int index){
         return m_data[index];
     }

@@ -50,9 +50,7 @@ namespace Memory{
 
         // add the large hole into the allocation map
         m_allocation_map.put((u32)first_header);
-        #ifdef DEBUG_HEAP
         IO::dbg() << "heap created at addr="<<m_start_addr<<" with size="<<size<<"\n";
-        #endif
         ASSERT(first_header->magic==HEAP_ENTRY_MAGIC, "WTF magic not being set!\n");
     }
 
@@ -101,7 +99,7 @@ namespace Memory{
             // now create the footer to go to the left of this new aligned header
             HeapEntryBoundary* footer = (HeapEntryBoundary*)(new_header_addr-sizeof(HeapEntryBoundary));
             footer->magic = HEAP_ENTRY_MAGIC;
-            footer->magic = HEAP_ENTRY_FOOTER;  
+            footer->mode = HEAP_ENTRY_FOOTER;  
             footer->hole = HEAP_ENTRY_HOLE;
             footer->size = shrinked_size;
 
@@ -163,6 +161,10 @@ namespace Memory{
         return allocation_addr;
     }
 
+    u32 Heap::realloc(u32 ptr, u1 page_align){
+        return ptr;
+    }
+
     void Heap::free(u32 addr){
         if(addr==0) return;
         HeapEntryBoundary* heap_entry_header = (HeapEntryBoundary*)(addr-sizeof(HeapEntryBoundary));
@@ -186,7 +188,7 @@ namespace Memory{
 
 
         // check if there is a hole to the left aswel, if so, we can merge with it
-        HeapEntryBoundary* test_footer = (HeapEntryBoundary*)((u32)heap_entry_header-sizeof(HeapEntryBoundary));
+        HeapEntryBoundary* test_footer = (HeapEntryBoundary*)(((u32)heap_entry_header)-sizeof(HeapEntryBoundary));
         if(test_footer->magic==HEAP_ENTRY_MAGIC 
         && test_footer->mode==HEAP_ENTRY_FOOTER
         && test_footer->hole==HEAP_ENTRY_HOLE){
@@ -266,9 +268,9 @@ namespace Memory{
             auto hole = (HeapEntryBoundary*)m_allocation_map[i];
             auto test_footer = (HeapEntryBoundary*)(m_allocation_map[i]+sizeof(HeapEntryBoundary)+hole->size);
             if(test_footer->magic!=HEAP_ENTRY_MAGIC){
-                IO::dbg() << "HEAP DEBUG: (HOLE IS INVALID) hole addr="<<m_allocation_map[i]<<", hole size="<<hole->size<<"\n";
+                IO::dbg() << "HEAP DEBUG: (HOLE HAS NO FOOTER) hole addr="<<m_allocation_map[i]<<", hole size="<<hole->size<<"\n";
             }else{
-                IO::dbg() << "HEAP DEBUG: hole addr="<<m_allocation_map[i]<<", hole size="<<hole->size<<"\n";
+                IO::dbg() << "HEAP DEBUG:                      hole addr="<<m_allocation_map[i]<<", hole size="<<hole->size<<"\n";
             }
 
         }

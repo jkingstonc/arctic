@@ -8,23 +8,35 @@ extern u32 end_of_kernel;
 
 namespace Memory{
 
-    Heap heap;
-
+    Heap* kernel_heap;
+    u1 kernel_heap_ready;
     u32 next_free_address = (u32)&end_of_kernel;
     u32 end_of_kernel_address = (u32)&end_of_kernel;
 
     // not aligned, and don't return the physical address
     u32 kmalloc(size size){
-        // !@TODO align properly, e.g. if size was 5 bytes, then allocate 8 bytes to word align
+        if(kernel_heap_ready){
+            return kernel_heap->alloc(size);
+        }
+        // !@TODO word align properly by type size, e.g. if size was 5 bytes, then allocate 8 bytes to word align
         u32 addr = next_free_address;
         next_free_address+=size;
-        IO::dbg() << "kmalloc size="<<size<<" addr="<<addr<<"\n";
         return addr;
     }
-    
+
     u32 krealloc(u32 data, size size){
-        return 0; // @TODO implement me
+        if(kernel_heap_ready){
+            return kernel_heap->realloc(data, size);
+        }
+        return 0;
     }
+
+    void kfree(u32 ptr){
+        if(kernel_heap_ready){
+            kernel_heap->free(ptr);
+        }
+    }
+
 
     u32 kmalloc_special(size size, u1 align, u1 physical, u32* physical_addr){
 
@@ -43,11 +55,6 @@ namespace Memory{
         u32 addr = next_free_address;
         // finally increase the next address by the size requested
         next_free_address+=size;
-
-
-        IO::kinfo("kmalloc=");
-        IO::kprint_int(addr);
-        IO::kprint_c('\n');
         return addr;
     }
 
@@ -63,7 +70,10 @@ namespace Memory{
         return kmalloc_special(size, true, true, physical_addr);
     }
 
-    void kfree(u32 ptr){
+    void setup_kernel_heap(){
+        kernel_heap = (Heap*)kmalloc(sizeof(Heap));
+        kernel_heap->setup(0xc00030, 0x10000);
+        kernel_heap_ready=true;
     }
 
 }

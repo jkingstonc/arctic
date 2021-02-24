@@ -5,9 +5,12 @@
 #include "../arch/i386/cpu/I386IDT.h"
 #include "../arch/i386/cpu/I386Interrupt.h"
 
+#include <kernel/cpu/Interrupt.h>
+
 
 
 namespace Device{
+
     u8 Keyboard::read(){
         return 0;
     }
@@ -39,6 +42,11 @@ namespace Device{
     
     u32 Keyboard::interrupt_flags() {
         return (0x08 << 8) | 0x8E;
+    }
+
+        
+    String Keyboard::name() {
+        return "ps2keyboard";
     }
 }
 

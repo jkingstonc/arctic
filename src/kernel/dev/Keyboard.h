@@ -8,12 +8,14 @@
 
 namespace Device{
     class Keyboard : public CharacterDevice, public CPU::InterruptService {
-        public:
+    public:
         u8 read() override;
         void write(u8 c) override;
         virtual void interrupt_handler(CPU::Registers registers) override;
         virtual u32 interrupt_idx() override;
         virtual u32 interrupt_flags() override;
+        String name() override;
+        static const u32 keyboard_id = 123;
     };
 }
 

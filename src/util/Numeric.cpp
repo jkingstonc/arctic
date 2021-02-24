@@ -1,6 +1,6 @@
 #include "Numeric.h"
 
-void itoa(s32 s, char* buffer){
+void itoa(int s, char* buffer){
     if(s==0){
         buffer[0]='0';
         buffer[1]='\0';
@@ -29,7 +29,7 @@ void itoa(s32 s, char* buffer){
     }
 }
 
-void itoa(u32 s, char* buffer){
+void itoa(unsigned int s, char* buffer){
     if(s==0){
         buffer[0]='0';
         buffer[1]='\0';
@@ -52,4 +52,8 @@ void itoa(u32 s, char* buffer){
         start++;
         end--;
     }
+}
+
+void ftoa(float s, char* buffer){
+    itoa((int)s, buffer);
 }

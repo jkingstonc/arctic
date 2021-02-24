@@ -55,5 +55,11 @@ run-text: all
 	objcopy -O elf32-i386 ./build/Arctic-0 ./build/boot/Arctic-0
 	$(QEMU) -kernel ./build/boot/Arctic-0 -serial stdio
 
+iso: all
+	cp ./src/grub.cfg ./build/boot/grub
+	objcopy -O elf32-i386 ./build/Arctic-0 ./build/boot/Arctic-0
+	grub-mkrescue build -o ./build/boot/Arctic-0.iso
+
+
 listsources:
 	dir *.cpp /S /B

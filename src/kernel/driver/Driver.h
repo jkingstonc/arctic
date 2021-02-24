@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../util/HashMap.h"
+#include <util/HashMap.h>
 
 namespace Driver{
     class Driver{
@@ -10,6 +10,6 @@ namespace Driver{
         virtual void init();
         virtual void close();
         private:
-        static Utils::HashMap<const char *> drivers;
+        //static HashMap<const char *> drivers;
     };
 }
