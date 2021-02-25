@@ -7,17 +7,13 @@ namespace Process{
     
     const Ref<Process> Process::create_kernel_proc(){
         Process* proc = (Process*)Memory::kmalloc(sizeof(Process));
+        Process::pid_counter++;
         return Ref<Process>(proc);
     }
 
     const Ref<Process> Process::create_user_proc(){
         Process* proc = (Process*)Memory::kmalloc(sizeof(Process));
+        Process::pid_counter++;
         return Ref<Process>(proc);
     }
-    
-    u32 Process::get_pid(){
-        return m_pid;
-    }
-
-
 }

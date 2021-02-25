@@ -1,7 +1,12 @@
-#include "String.h"
-#include "../kernel/memory/KMalloc.h"
+#include <util/String.h>
+#include <util/Malloc.h>
+
+#define STRING_INIT_SIZE 25
 
 String::String(){
+    m_size=0;
+    m_cstr = (char*)malloc(STRING_INIT_SIZE);
+    m_allocated = STRING_INIT_SIZE;
 }
 String::String(const char* cstr){
     m_cstr=cstr;
@@ -14,7 +19,7 @@ String::~String(){
 
 void String::append(String s){
     // allocate enough space for the new string
-    char* new_str = (char*)Memory::kmalloc_aligned(strlen(m_cstr)+s.length()+1);
+    char* new_str = (char*)malloc(strlen(m_cstr)+s.length()+1);
     u32 i;
     for (i=0;i<strlen(m_cstr);i++){
         new_str[i]=m_cstr[i];
@@ -33,8 +38,7 @@ void String::append(String s){
 
 
 void String::append(const char* s){
-    // allocate enough space for the new string
-    char* new_str = (char*)Memory::kmalloc_aligned(strlen(m_cstr)+strlen(s)+1);
+    char* new_str = (char*)malloc(strlen(m_cstr)+strlen(s)+1);
     u32 i;
     for (i=0;i<strlen(m_cstr);i++){
         new_str[i]=m_cstr[i];
@@ -46,7 +50,7 @@ void String::append(const char* s){
     new_str[i+j+1]='\0';
     m_cstr=new_str;
     // deallocate ourself and the other string
-    //Memory::kfree(s);
+    //free((void*)s);
     clear();
 }
 

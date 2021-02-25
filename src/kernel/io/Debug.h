@@ -15,6 +15,7 @@ namespace IO{
         friend DbgStream& operator<<(DbgStream& ds, s32 s);
         friend DbgStream& operator<<(DbgStream& ds, u32 s);
         friend DbgStream& operator<<(DbgStream& ds, f32 s);
+        friend DbgStream& operator<<(DbgStream& ds, f64 s);
     private:
         u16 m_port;
     };
@@ -24,6 +25,7 @@ namespace IO{
     extern DbgStream& operator<<(DbgStream& ds, s32 s);
     extern DbgStream& operator<<(DbgStream& ds, u32 s);
     extern DbgStream& operator<<(DbgStream& ds, f32 s);
+    extern DbgStream& operator<<(DbgStream& ds, f64 s);
     extern DbgStream dbg_stream;
     extern DbgStream& dbg();
 

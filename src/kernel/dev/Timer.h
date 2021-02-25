@@ -9,11 +9,17 @@
 namespace Device{
     class Timer : public Device, public CPU::InterruptService{
     public:
+        void setup() override;
         void interrupt_handler(CPU::Registers registers) override;
         u32 interrupt_flags() override;
         u32 interrupt_idx() override;
+        u32 tick() const;
+        u16 read_count();
     private:
-        u32 m_tick = 0;
+        u32 m_tick = 1;
+        u32 m_target_freq = 1193180/100;
+        u32 m_frequency;
+        static const u32 PITFrequency = 1193180;
     };
 }
 

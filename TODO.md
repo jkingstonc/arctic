@@ -1,0 +1,3 @@
+- dbg() << not working in Timer
+- get FPU working
+- write proper String and StringStream library

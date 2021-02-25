@@ -50,7 +50,7 @@ namespace Memory{
 
         // add the large hole into the allocation map
         m_allocation_map.put((u32)first_header);
-        IO::dbg() << "heap created at addr="<<m_start_addr<<" with size="<<size<<"\n";
+        IO::dbg() << "heap created at addr="<<(s32)m_start_addr<<" with size="<<(s32)size<<"\n";
         ASSERT(first_header->magic==HEAP_ENTRY_MAGIC, "WTF magic not being set!\n");
     }
 

@@ -45,10 +45,16 @@ namespace IO{
     }
 
     DbgStream& operator<<(DbgStream& ds, f32 s){
-        char buffer[50];
-        ftoa(s, buffer);
-        for(u32 i=0;buffer[i];i++)
-            IO::write_serial(ds.m_port, buffer[i]);
+        String buf = to_string(s);
+        for(u32 i=0;buf.size();i++)
+            IO::write_serial(ds.m_port, buf.at(i));
+        return ds;
+    }
+
+    DbgStream& operator<<(DbgStream& ds, f64 s){
+        String buf = to_string(s);
+        for(u32 i=0;buf.size();i++)
+            IO::write_serial(ds.m_port, buf.at(i));
         return ds;
     }
 

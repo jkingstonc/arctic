@@ -1,4 +1,4 @@
-CXXFLAGS=-m32 -ffreestanding -nostdinc -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions
+CXXFLAGS=-m32 -ffreestanding -nostdinc -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions -mno-fancy-math-387 -mfpmath=387
 LDFLAGS=-m elf_i386 -T src/link.ld
 ASMFLAGS=-f elf32
 ASFLAGS=-felf

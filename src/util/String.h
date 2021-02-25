@@ -2,7 +2,6 @@
 
 #include "../kernel/Kernel.h"
 
-#define STRING_INITIAL_ALLOC 50
 
 class String{
 public:
@@ -25,6 +24,7 @@ public:
     int find(char c, unsigned int pos=0);
 private:
     const char * m_cstr;
+    u32 m_size = 0;
     u32 m_allocated = 0;
 };
 

@@ -28,6 +28,7 @@
 #include <kernel/memory/Heap.h>
 #include <kernel/memory/KMalloc.h>
 #include <kernel/process/Process.h>
+#include <kernel/process/Scheduler.h>
 
 
 
@@ -41,17 +42,18 @@ void assert(u1 expression, u32 line, const char* file, const char* msg){
 // entry point for the kernel
 int main(multiboot_info* multiboot_info, u32 magic){
     IO::dbg_stream = IO::DbgStream(COM1);
-    
+
     Memory::setup_kernel_heap();
     IO::setup_serial();
     
     CPU::setup_cpu_stage1();
 
-
     Device::setup_devices();
  
     auto tm = Device::Timer();
     auto kb = Device::Keyboard();
+    tm.setup();
+    kb.setup();
     CPU::register_interrupt(&kb);
     CPU::register_interrupt(&tm);
 
@@ -60,16 +62,6 @@ int main(multiboot_info* multiboot_info, u32 magic){
 
 
     //Memory::setup_paging();
-
-
-    
-    Ref<s32> ref((s32*)Memory::kmalloc(sizeof(s32)));
-    Ref<s32> other_ref = ref;
-    *other_ref=123;
-    IO::dbg() << "ref counter: "<<other_ref.count()<<"\n";
-
-    Ref<Process::Process> proc = Process::Process::create_kernel_proc();
-
 
     // // the issue is that that the vbe memory map is not mapped into the virtual address space
     Driver::VGAGraphics::vga_driver.colour(Driver::VGAGraphics::vga_red);
@@ -90,22 +82,9 @@ int main(multiboot_info* multiboot_info, u32 magic){
             }
         }
 
-
-        // IO::dbg() << "sqrt(4)="<<sqrt(4)<<"\n";
-        // #define RAD 50
-        // for(u32 i=vbe_graphics.width()/2 -50;i<vbe_graphics.width()/2+50;i++){
-        //     for(u32 j=vbe_graphics.height()/2 -50;j<vbe_graphics.height()/2+50;j++){
-        //         if(sqrt(
-        //             pow((int)(i-vbe_graphics.width()/2),2)
-        //             +
-        //             pow((int)(j-vbe_graphics.height()/2),2)
-        //             )<RAD){
-        //             vbe_graphics.write_pixel(j,i,0x00FF00);
-        //         }
-        //     }
-        // }
-
     }
+
+
 
     // struct {
     //     FS::InitRDHeader header;
@@ -117,6 +96,7 @@ int main(multiboot_info* multiboot_info, u32 magic){
     // rd.entry1.filename="hello world!";
 
     // FS::setup_initrd((u32)&rd);
+
 
     IO::dbg() << "kernel booted version " << VERSION << "\n";
 
